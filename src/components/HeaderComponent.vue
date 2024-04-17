@@ -1,13 +1,13 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
     <a href="/" class="navbar-brand ms-2">
-      <img src="@/assets/images/apple-icon.png"  width="30" height="24"/>
+      <img src="@/assets/images/apple-icon.png" width="30" height="24" />
     </a>
     <button @click="toggleShow" ref="myCollapse" class="navbar-toggler" type="button"
-      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div id="navbarNavAltMarkup" class="navbar-collapse justify-content-end" v-bind:class="isActive ? '' : 'collapse'">
+    <div id="navbarNavAltMarkup" class="navbar-collapse justify-content-end" v-bind:class="isActive || isDesktop ? '' : 'collapse'">
       <div class="navbar-nav">
         <router-link to="/articles" class="text-secondary nav-link" @click="toggleShow">
           <i class="fa-solid fa-newspaper"></i>
@@ -36,30 +36,45 @@
 </template>
 
 <script setup>
-import { Collapse } from 'bootstrap'
-import { ref, onMounted } from 'vue'
-import { storeToRefs } from 'pinia'
-import useCartStore from "@/stores/carts"
+  import { Collapse } from 'bootstrap'
+  import { ref, onMounted, watchEffect } from 'vue'
+  import { storeToRefs } from 'pinia'
+  import useCartStore from "@/stores/carts"
 
-const myCollapse = ref(null)
-const isActive = ref(false)
-const { cartList } = storeToRefs(useCartStore())
-let bsCollapse
+  const myCollapse = ref(null)
+  const isActive = ref(false)
+  const isDesktop = ref(false)
+  const screenWidth = ref(window.innerWidth)
 
-onMounted(function () {
-  isActive.value = false
-  bsCollapse = new Collapse(
-    myCollapse.value, 
-    {
-      toggle: isActive.value
+  const { cartList } = storeToRefs(useCartStore())
+
+  let bsCollapse
+
+  onMounted(function () {
+    bsCollapse = new Collapse(
+      myCollapse.value,
+      {
+        toggle: isActive.value
+      }
+    )
+    window.addEventListener('resize', function () {
+      screenWidth.value = window.innerWidth
+    })
+  })
+  watchEffect(function () {
+    if (screenWidth.value > 992) {
+      isActive.value = true
+      isDesktop.value = true
+    } else {
+      isActive.value = false
+      isDesktop.value = false
     }
-  )
-})
-function toggleShow () { isActive.value = !isActive.value }
+  })
+  function toggleShow () { isActive.value = !isActive.value }
 </script>
 
 <style scoped>
-.active{
-  background-color:aqua;
-}
+  .active {
+    background-color: aqua;
+  }
 </style>
