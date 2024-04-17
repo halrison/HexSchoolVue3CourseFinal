@@ -17,14 +17,14 @@
         <div class="card-group row">
           <div class="col-4" v-for="product in filterProducts" :key="product.id">
             <ProductCard :product="product" class="mb-3">
-              <template v-slot:header>
+              <template #header>
                 <div class="card-header">
                   <router-link class="text-decoration-none" :to="`/product?id=${product.id}`">
-                    <h5 class="card-title">{{ product.title }}</h5>
+                    <h6 class="card-title">{{ product.title }}</h6>
                   </router-link>
                 </div>
               </template>
-              <template v-slot:body>
+              <template #body>
                 <div class="card-body">
                   <span class="card-text float-start">台幣{{ product.price }}元</span>
                   <span class="card-text float-end">
@@ -37,7 +37,7 @@
         </div>
       </div>
     </div>
-    <Pagination :pagination="pagination" v-show="pagination.total_pages > 1" @paginate="page=>getProducts(page, 'customer')" />
+    <Pagination :pagination="pagination" v-show="pagination.total_pages > 1" @paginate="page => getProducts(page, 'customer')" />
   </div>
 </template>
 
@@ -57,7 +57,7 @@
   const { isLoading } = storeToRefs(useLoadingStore())
 
   const selected=ref('')
-  const filterProducts = computed(()=>{
+  const filterProducts = computed(() => {
     switch (selected.value) {
       case '':
         return products.value
@@ -72,6 +72,6 @@
 
   onMounted(async function () {
     await getProducts(1, 'customers')
-    selected.value=''
+    selected.value = ''
   })
 </script>

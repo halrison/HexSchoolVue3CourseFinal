@@ -1,31 +1,42 @@
 <template>
   <LoadingC :is-full-page="true" :active="isLoading" />
-  <button type="button" class="float-end btn btn-primary" @click="openModal('add')">新增文章</button>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>標題</th>
-        <th>作者</th>
-        <th>建立日期</th>
-        <th>公開</th>
-        <th>動作</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="article in articles" :key="article.id">
-        <td>{{ article.title }}</td>
-        <td>{{ article.author }}</td>
-        <td>{{ new Date(article.create_at).toLocaleDateString() }}</td>
-        <td>{{ article.isPublic ? '是' : '否' }}</td>
-        <td>
-          <div class="btn-group btn-group-sm">
-            <button class="btn btn-outline-primary" @click="openModal('edit', article.id)">編輯</button>
-            <button class="btn btn-outline-danger" @click="openModal('remove', article.id)">移除</button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <button type="button" class="float-end btn btn-primary mt-1" @click="openModal('add')">新增文章</button>
+  <div class="table-responsive-sm overflow-x-hidden mt-5">
+    <table class="table table-striped">
+      <thead>
+        <tr class="row mx-0">
+          <th class="col-sm-8 col-lg-4">標題</th>
+          <th class="col-sm-4 col-lg-2">作者</th>
+          <th class="col-sm-4 col-lg-2">建立日期</th>
+          <th class="col-sm-4 col-lg-1">公開</th>
+          <th class="col-sm-4 col-lg-3">動作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row mx-0" v-for="article in articles" :key="article.id">
+          <td class="col-sm-8 col-lg-4">{{ article.title }}</td>
+          <td class="col-sm-4 col-lg-2">{{ article.author }}</td>
+          <td class="col-sm-4 col-lg-2">{{ new Date(article.create_at).toLocaleDateString() }}</td>
+          <td class="col-sm-4 col-lg-1" 
+            v-bind:class="article.isPublic ? 'text-success' : 'text-danger'">
+            {{ article.isPublic ? '是' : '否' }}
+          </td>
+          <td class="col-sm-4 col-lg-3">
+            <div class="btn-group">
+              <button class="btn btn-outline-primary" @click="openModal('edit', article.id)">
+                <i class="bi bi-pencil-square"></i>
+                <span class="d-none d-lg-inline-block">編輯</span>
+              </button>
+              <button class="btn btn-outline-danger" @click="openModal('remove', article.id)">
+                <i class="bi bi-trash"></i>
+                <span class="d-none d-lg-inline-block">移除</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <Pagination :pagination="pagination" v-show="pagination.total_pages > 1" @paginate="page => ArticleStore.getArticles(page, 'admin')" />
   <ArticleModal ref="addEditModal" :article="article" />
   <RemoveModal type="文章" ref="removeModal" :item="article" />
@@ -52,9 +63,11 @@
   const articles = computed(() => ArticleStore.articles)
   const pagination = computed(() => ArticleStore.pagination)
 
+
   onMounted(async function () {
-    await ArticleStore.getArticles(1, 'admin')
+    await ArticleStore.getArticles(1, 'admin')    
   })
+
 
   function openModal (action, id = '') {
     article.value = {}

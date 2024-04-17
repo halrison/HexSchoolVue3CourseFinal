@@ -1,35 +1,44 @@
 <template>
   <LoadingC :is-full-page="true" :active="isLoading" />
-  <button type="button" class="btn btn-primary float-end" @click="openModal('add')">新增商品</button>
-  <table class="table mt-4">
-    <thead>
-      <tr>
-        <th>分類</th>
-        <th>產品名稱</th>
-        <th class="text-end">原價</th>
-        <th class="text-end">售價</th>
-        <th class="text-center">是否啟用</th>
-        <th>編輯</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="product in products" :key="product.id">
-        <td >{{ product.category }}</td>
-        <td>{{ product.title }}</td>
-        <td class="text-end">{{ currency(product.origin_price) }}</td>
-        <td class="text-end">{{ currency(product.price) }}</td>
-        <td :class="product.is_enabled === 1 ? 'text-success' : 'text-danger'" class="text-center">
-          <span>{{ product.is_enabled === 1 ? '啟' : '停' }}用</span>
-        </td>
-        <td>
-          <div class="btn-group">
-            <button @click="openModal('modify',product.id)" class="btn btn-outline-primary btn-sm">編輯</button>
-            <button @click="openModal('remove',product.id)" class="btn btn-outline-danger btn-sm">移除</button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <button type="button" class="btn btn-primary float-end mt-1" @click="openModal('add')">新增商品</button>
+  <div class="table-responsive-sm overflow-x-hidden mt-5">
+    <table class="table table-striped">
+      <thead class="sticky-top">
+        <tr class="row mx-0">
+          <th class="col-sm-3 col-lg-2">分類</th>
+          <th class="col-sm-9 col-lg-3">產品名稱</th>
+          <th class="col-sm-3 col-lg-2 text-md-end">原價</th>
+          <th class="col-sm-3 col-lg-2 text-md-end">售價</th>
+          <th class="col-sm-3 col-lg-1 text-md-center">狀態</th>
+          <th class="col-sm-3 col-lg-2">動作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row mx-0" v-for="product in products" :key="product.id">
+          <td class="col-sm-3 col-lg-2">{{ product.category }}</td>
+          <td class="col-sm-9 col-lg-3">{{ product.title }}</td>
+          <td class="col-sm-3 col-lg-2 text-md-end">{{ currency(product.origin_price) }}</td>
+          <td class="col-sm-3 col-lg-2 text-md-end">{{ currency(product.price) }}</td>
+          <td class="col-sm-3 col-lg-1 text-md-center"
+            v-bind:class="product.is_enabled === 1 ? 'text-success' : 'text-danger'">
+            {{ product.is_enabled === 1 ? '啟' : '停' }}用
+          </td>
+          <td class="col-sm-3 col-lg-2">
+            <div class="btn-group btn-group-sm">
+              <button @click="openModal('modify',product.id)" class="btn btn-outline-primary">
+                <i class="bi bi-pencil-square"></i>
+                <span class="d-none d-lg-inline-block">編輯</span>
+              </button>
+              <button @click="openModal('remove',product.id)" class="btn btn-outline-danger">
+                <i class="bi bi-trash"></i>
+                <span class="d-none d-lg-inline-block">移除</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <Pagination :pagination="pagination" v-show="pagination.total_pages > 1" @paginate="page => ProductStore.getProducts(page, 'admin')" />
   <ProductModal :product="product" ref="addEditModal" />
   <RemoveModal :item="product" type="產品" ref="removeModal" />

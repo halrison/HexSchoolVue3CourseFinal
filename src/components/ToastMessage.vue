@@ -1,7 +1,7 @@
 <template>
   <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" ref="DOM">
     <div class="toast-header">
-      <span :class="`bg-${prop.msg.type}`" class="p-2 me-2 d-inline-block badge rounded-pill "></span>
+      <span class="p-2 me-2 d-inline-block badge rounded-pill" v-bind:class="`bg-${prop.msg.type}`"></span>
       <strong class="me-auto">{{ prop.msg.title }}</strong>
       <small class="text-muted">{{ new Date().toLocaleDateString() }}</small>
     </div>
@@ -14,7 +14,7 @@ import { onMounted, ref } from "vue"
 import { Toast } from "bootstrap"
 
 const DOM = ref(null)
-const prop=defineProps(['msg'])
+const prop = defineProps(['msg'])
 let toastObject
 
 onMounted(function(){

@@ -9,7 +9,7 @@
               <td>標題</td>
               <td>
                 <FieldC label="標題" name="title" class="form-control" type="text" rules="required" 
-                v-model="coupon.title" :class="{ 'is-invalid': errors['title'] }"/>
+                v-model="coupon.title" v-bind:class="{ 'is-invalid': errors['title'] }"/>
                 <ErrorMessage name="title" class="invalid-feedback"/>
               </td>
             </tr>
@@ -17,7 +17,7 @@
               <td>代碼</td>
               <td>
                 <FieldC label="代碼" name="code" class="form-control" type="text" rules="required"
-                v-model="coupon.code" :class="{ 'is-invalid': errors['code'] }" />
+                v-model="coupon.code" v-bind:class="{ 'is-invalid': errors['code'] }" />
                 <ErrorMessage name="code" class="invalid-feedback" />
               </td>
             </tr>
@@ -25,7 +25,7 @@
               <td>折扣</td>
               <td>
                 <FieldC label="折扣" name="discount" class="form-control" type="number" rules="required|integer" min="1" max="99" 
-                v-model="coupon.percent" :class="{ 'is-invalid': errors['discount'] }" />
+                v-model="coupon.percent" v-bind:class="{ 'is-invalid': errors['discount'] }" />
                 <ErrorMessage name="discount" class="invalid-feedback" />
               </td>
             </tr>
@@ -33,7 +33,7 @@
               <td>到期日</td>
               <td>
                 <FieldC label="到期日" name="date" class="form-control" type="date" rules="required"
-                v-model="coupon.due_date" :class="{ 'is-invalid': errors['date'] }" />
+                v-model="coupon.due_date" v-bind:class="{ 'is-invalid': errors['date'] }" />
                 <ErrorMessage name="date" class="invalid-feedback" />
               </td>
             </tr>

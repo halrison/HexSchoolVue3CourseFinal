@@ -2,27 +2,27 @@
   <nav class="navbar navbar-light bg-light sticky-top">
     <router-link to="/" class="text-primary navbar-brand ms-2">
       <img src="@/assets/images/apple-icon.png" width="30" height="24" />
-      後臺管理系統
+      <h6 class="d-inline-block ms-1">後臺管理系統</h6>
     </router-link>
-    <button @click="toggleShow" :style="{ 'visibility': isDesktop ? 'hidden' : 'visible' }" ref="myCollapse" class="navbar-toggler" type="button"
-      data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <button @click="toggleShow" v-bind:class="isDesktop ? 'invisible' : 'visible'" ref="myCollapse" class="navbar-toggler" type="button"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div :class="{ 'show': isActive }" class="collapse navbar-collapse vh-100" id="navbarNavAltMarkup">
+    <div id="navbarNavAltMarkup" class=" navbar-collapse vh-100" v-bind:class="isActive || isDesktop ? '' : 'collapse'">
       <div class="nav flex-column">
-        <router-link to="/admin/product" class="text-center text-secondary nav-link">
+        <router-link to="/admin/product" class="text-center text-secondary nav-link" @click="toggleShow">
           <i class="fa-brands fa-product-hunt"></i>
           商品
         </router-link>
-        <router-link to="/admin/coupon" class="text-center text-secondary nav-link">
+        <router-link to="/admin/coupon" class="text-center text-secondary nav-link" @click="toggleShow">
           <i class="bi bi-box-arrow-in-right"></i>
           優惠券
         </router-link>
-        <router-link to="/admin/order" class="text-center text-secondary nav-link">
+        <router-link to="/admin/order" class="text-center text-secondary nav-link" @click="toggleShow">
           <i class="fa-solid fa-note-sticky"></i>
           訂單
         </router-link>
-        <router-link to="/admin/article" class="text-center text-secondary nav-link">
+        <router-link to="/admin/article" class="text-center text-secondary nav-link" @click="toggleShow">
           <i class="bi bi-cart"></i>
           文章
         </router-link>
@@ -50,7 +50,7 @@
     bsCollapse = new Collapse(
       myCollapse.value,
       {
-        toggle: false
+        toggle: isActive.value
       }
     )
     window.addEventListener('resize', function () { 

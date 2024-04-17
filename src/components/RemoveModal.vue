@@ -6,7 +6,7 @@
           <h5 class="modal-title">{{ title }}</h5>
         </div>
         <div class="modal-body">
-          <p>您要{{title}}嗎？</p>
+          <p>您要{{ title }}嗎？</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" @click="hide">取消</button>

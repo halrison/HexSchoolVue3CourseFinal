@@ -9,7 +9,7 @@
               <label for="title">標題</label>
             </div>
             <div class="col-9">
-              <FieldC label="標題" name="title" class="form-control" id="title" type="text" rules="required" v-model="article.title" :class="{ 'is-invalid': errors['title'] }" />
+              <FieldC label="標題" name="title" class="form-control" id="title" type="text" rules="required" v-model="article.title" v-bind:class="{ 'is-invalid': errors['title'] }" />
               <ErrorMessage class="invalid-feedback" name="title" />
             </div>
           </div>
@@ -23,9 +23,9 @@
                 <br />
                 <p class="mb-3 input-group">
                   <FieldC label="網址" name="url" rules="url" type="text" class="form-control" id="image" aria-describedby="addImage" placeholder="請輸入圖片連結"
-                         v-model="tempUrl" :standalone="true" :class="{ 'is-invalid': errors['url'] }" />
+                         v-model="tempUrl" :standalone="true" v-bind:class="{ 'is-invalid': errors['url'] }" />
                   <button id="addImage" type="button" class="btn btn-outline-primary btn-sm"
-                          @click="addImage(tempUrl,url=>article.image=url)" :disabled="!tempUrl">
+                          @click="addImage(tempUrl,url=>article.image=url)" v-bind:disabled="!tempUrl">
                     新增圖片
                   </button>
                 </p>
@@ -34,7 +34,7 @@
               <div class="mb-3">
                 <label for="input" class="form-label">或上傳圖片</label>
                 <FieldC class="form-control" name="file" type="file" rules="image" label="選取檔案"
-                       @change="event=>UploadImage(event.target.files, url=>tempUrl=url)" :class="{ 'is-invalid': errors['file'] }" :standalone="true" />
+                       @change="event=>UploadImage(event.target.files, url=>tempUrl=url)" v-bind:class="{ 'is-invalid': errors['file'] }" :standalone="true" />
                 <ErrorMessage name="file" class="invalid-feedback" :style="{'display': errors['file'] ? 'block' : 'none' }" />
               </div>
             </div>
@@ -70,7 +70,7 @@
             </div>
             <div class="col-9">
               <FieldC label="內容" as="textarea" name="content" class="form-control" id="content" rows="2" cols="40" rules="required"
-                     v-model="article.content" :class="{ 'is-invalid': errors['content'] }" />
+                     v-model="article.content" v-bind:class="{ 'is-invalid': errors['content'] }" />
               <ErrorMessage class="invalid-feedback" name="content" />
             </div>
           </div>
@@ -80,7 +80,7 @@
             </div>
             <div class="col-9">
               <FieldC label="作者" name="author" class="form-control" id="author" type="text" rules="required"
-                     v-model="article.author" :class="{ 'is-invalid': errors['author'] }" />
+                     v-model="article.author" v-bind:class="{ 'is-invalid': errors['author'] }" />
               <ErrorMessage class="invalid-feedback" name="author" />
             </div>
           </div>
@@ -90,14 +90,14 @@
             </div>
             <div class="col">
               <input class="form-check-input" id="public" type="checkbox"
-                     v-model="article.isPublic" :class="{ 'is-invalid': errors['public'] }" />
+                     v-model="article.isPublic" v-bind:class="{ 'is-invalid': errors['public'] }" />
             </div>
             <div class="col">
               <label for="date">建立日期</label>
             </div>
             <div class="col">
               <FieldC label="建立日期" name="date" class="form-control" id="date" type="date" rules="required"
-                     v-model="article.create_at" :class="{ 'is-invalid': errors['date'] }" />
+                     v-model="article.create_at" v-bind:class="{ 'is-invalid': errors['date'] }" />
               <ErrorMessage class="invalid-feedback" name="date" />
             </div>
           </div>

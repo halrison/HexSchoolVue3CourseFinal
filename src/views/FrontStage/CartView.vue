@@ -22,13 +22,13 @@
             <div class="input-group d-inline-block">
               <div class="input-group bg-light rounded">
                 <div class="input-group-prepend">
-                  <button class="btn btn-outline-dark border-0 py-2" type="button" @click="editCart(cart.id, cart.qty - 1)" :disabled="cart.qty < 2">
+                  <button class="btn btn-outline-dark border-0 py-2" type="button" @click="editCart(cart.id, cart.qty - 1)" v-bind:disabled="cart.qty < 2">
                     <i class="bi bi-dash"></i>
                   </button>
                 </div>
                 <input type="text" class="form-control border-0 text-center my-auto shadow-none bg-light" required min="1"
                        aria-label="Example text with button addon" aria-describedby="button-addon1"
-                       v-model.number="cart.qty" :class="{ 'is-invalid': !cart.qty || cart.qty.toString().includes('.') }" @change="editCart(cart.id, cart.qty)" />
+                       v-model.number="cart.qty" v-bind:class="{ 'is-invalid': !cart.qty || cart.qty.toString().includes('.') }" @change="editCart(cart.id, cart.qty)" />
                 <div class="input-group-append">
                   <button class="btn btn-outline-dark border-0 py-2" type="button" @click="editCart(cart.id, cart.qty + 1)">
                     <i class="bi-plus bi"></i>
@@ -73,28 +73,28 @@
       <div class="row">
         <div class="col-3">姓名</div>
         <div class="col-9">
-          <FieldC class="form-control" rules="required" name="name" label="姓名" v-model="user.name" :class="{ 'is-invalid': errors['name'] }" />
+          <FieldC class="form-control" rules="required" name="name" label="姓名" v-model="user.name" v-bind:class="{ 'is-invalid': errors['name'] }" />
           <ErrorMessage class="text-danger" name="name" />
         </div>
       </div>
       <div class="row">
         <div class="col-3">地址</div>
         <div class="col-9">
-          <FieldC class="form-control" rules="required" name="address" label="地址" v-model="user.address" :class="{ 'is-invalid': errors['address'] }" />
+          <FieldC class="form-control" rules="required" name="address" label="地址" v-model="user.address" v-bind:class="{ 'is-invalid': errors['address'] }" />
           <ErrorMessage class="text-danger" name="address" />
         </div>
       </div>
       <div class="row">
         <div class="col-3">電話</div>
         <div class="col-9">
-          <FieldC class="form-control" rules="required|isPhone" name="tel" label="電話" v-model="user.tel" :class="{ 'is-invalid': errors['tel'] }" />
+          <FieldC class="form-control" rules="required|isPhone" name="tel" label="電話" v-model="user.tel" v-bind:class="{ 'is-invalid': errors['tel'] }" />
           <ErrorMessage class="text-danger" name="tel" />
         </div>
       </div>
       <div class="row">
         <div class="col-3">電子信箱</div>
         <div class="col-9">
-          <FieldC class="form-control" name="email" rules="required|email" label="電子信箱" v-model="user.email" :class="{ 'is-invalid': errors['email'] }" />
+          <FieldC class="form-control" name="email" rules="required|email" label="電子信箱" v-model="user.email" v-bind:class="{ 'is-invalid': errors['email'] }" />
           <ErrorMessage class="text-danger" name="email" />
         </div>
       </div>
@@ -111,7 +111,7 @@
       </div>
     </div>
   </FormC>
-  <h1 class="text-center" v-else>未選購任何商品</h1>
+  <h1 class="text-center vh-100" v-else>未選購任何商品</h1>
   <RemoveModal ref="modal" :item="cartItem" :type="type" />
 </template>
 <script setup>

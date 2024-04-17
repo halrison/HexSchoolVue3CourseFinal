@@ -42,7 +42,7 @@
   const filterArticles = computed(() =>{
     if(selected.value.length){
       return articles.value.filter(article =>{
-        if(Object.hasOwn(article, 'tag')){ 
+        if (article.hasOwnProperty('tag')){ 
           return article.tag.some(t => selected.value.includes(t))
         }
       })

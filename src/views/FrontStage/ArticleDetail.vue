@@ -7,7 +7,7 @@
     <div class="row">
       <h6 class="text-center">{{ article.description }}</h6>
     </div>
-    <img class="d-block mx-auto" :src="article.image" />
+    <img class="d-block mx-auto w-100" :src="article.image" />
     <p class="row">{{ article.content }}</p>
   </div>
 </template>

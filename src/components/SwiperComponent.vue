@@ -1,14 +1,23 @@
 <template>
   <Swiper ref="{ swiperRef }" 
-      :slidesPerView="3"
-      :spaceBetween="10"
+      :slidesPerView="1"
       :autoplay="{
         delay: 2500,
         disableOnInteraction: false
       }"
+      :breakpoints="{        
+        '576':{
+          slidesPerView: 2,
+          spaceBetween: 5
+        },
+        '1200':{
+          slidesPerView: 3,
+          spaceBetween: 10
+        }
+      }"
       :navigation="true"
       :modules="modules">
-    <SwiperSlide class="col-4" v-for="product,index in prop.products" :key="index">
+    <SwiperSlide class="col-4 col-xs-12" v-for="product,index in prop.products" :key="index">
       <ProductCard :product="product">
         <template #header>
           <div class="card-header">

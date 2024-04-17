@@ -1,4 +1,4 @@
-<template>
+v-bind<template>
   <LoadingC :is-full-page="true" :active="isLoading" />
   <div class="container position-relative">
     <div class="position-absolute h-100"></div>
@@ -8,13 +8,13 @@
         <div class="mb-2">
           <label for="inputEmail" class="sr-only">Email address</label>
           <FieldC type="email" id="inputEmail" class="form-control" placeholder="Email address" rules="required" name="username"
-            v-model="user.username" :class="{ 'is-invalid': errors['username'] }" />
+            v-model="user.username" v-bind:class="{ 'is-invalid': errors['username'] }" />
           <ErrorMessage name="username" class="invalid-feedback" />
         </div>
         <div class="mb-2">
           <label for="inputPassword" class="sr-only">Password</label>
           <FieldC type="password" id="inputPassword" class="form-control" placeholder="Password" name="password" rules="required"
-            v-model="user.password" :class="{ 'is-invalid': errors['password'] }" />
+            v-model="user.password" v-bind:class="{ 'is-invalid': errors['password'] }" />
           <ErrorMessage name="password" class="invalid-feedback" />
         </div>
         <div class="text-end my-4">

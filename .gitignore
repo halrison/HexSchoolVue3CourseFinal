@@ -27,3 +27,5 @@ obj
 *.sln
 *.sw?
 .env
+/docs
+.nojekyll

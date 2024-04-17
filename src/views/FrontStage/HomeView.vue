@@ -2,7 +2,7 @@
   <LoadingC v-bind:is-full-apge="true" v-bind:active="isLoading" />
   <div class="row justify-content-center my-auto">
     <div class="text-center">
-      <h1 class="mt-3">Zay 生活用品店</h1>
+      <h2 class="mt-3">Zay 生活用品店</h2>
       <p class="text-muted mb-0">你的品味，由你創造</p>
       <button class="btn btn-dark rounded-0 mt-6" v-on:click="getDiscount">立即搶折扣</button>
     </div>

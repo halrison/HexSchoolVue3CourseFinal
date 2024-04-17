@@ -15,9 +15,9 @@
                 <br />
                 <p class="mb-3 input-group">
                   <FieldC label="圖片網址" name="url" rules="url" type="text" class="form-control" id="image" aria-describedby="addImage" placeholder="請輸入圖片連結"
-                     v-model="tempUrl" :standalone="true" :class="{ 'is-invalid': errors['url'] }"/>
+                     v-model="tempUrl" v-bind:class="{ 'is-invalid': errors['url'] }" :standalone="true"/>
                   <button id="addImage" type="button" class="btn btn-outline-primary btn-sm"
-                    @click="AddImage(tempUrl, url => addImage(url))" :disabled="!tempUrl">
+                    @click="AddImage(tempUrl, url => addImage(url))" v-bind:disabled="!tempUrl">
                     新增圖片
                   </button>
                 </p>
@@ -52,20 +52,20 @@
               <div class="mb-3">
                 <label for="title" class="form-label">標題</label>
                 <FieldC type="text" class="form-control" id="title" label="標題" name="title" rules="required" placeholder="請輸入標題"
-                  v-model="ProductStore.product.title"  :class="{ 'is-invalid': errors['title'] }"/>
+                  v-model="ProductStore.product.title" v-bind:class="{ 'is-invalid': errors['title'] }"/>
                 <ErrorMessage class="invalid-feedback" name="title" />
               </div>
               <div class="row gx-2">
                 <div class="mb-3 col-md-6">
                   <label for="category" class="form-label">分類</label>
                   <FieldC type="text" class="form-control" id="category" rules="required" placeholder="請輸入分類" label="分類" name="category"
-                    v-model="ProductStore.product.category"  :class="{ 'is-invalid': errors['category'] }"/>
+                    v-model="ProductStore.product.category" v-bind:class="{ 'is-invalid': errors['category'] }"/>
                   <ErrorMessage class="invalid-feedback" name="category" />
                 </div>
                 <div class="mb-3 col-md-6">
                   <label for="price" class="form-label">單位</label>
                   <FieldC type="text" class="form-control" id="unit" label="單位" name="unit" rules="required" placeholder="請輸入單位"
-                    v-model="ProductStore.product.unit"  :class="{ 'is-invalid': errors['unit'] }"/>
+                    v-model="ProductStore.product.unit" v-bind:class="{ 'is-invalid': errors['unit'] }"/>
                   <ErrorMessage class="invalid-feedback" name="unit" />
                 </div>
               </div>
@@ -73,13 +73,13 @@
                 <div class="mb-3 col-md-6">
                   <label for="origin_price" class="form-label">原價</label>
                   <FieldC type="number" class="form-control" id="origin_price" min="1" rules="required|integer" placeholder="請輸入原價" label="原價" name="origin_price"
-                    v-model="ProductStore.product.origin_price"  :class="{ 'is-invalid': errors['origin_price'] }"/>
+                    v-model="ProductStore.product.origin_price" v-bind:class="{ 'is-invalid': errors['origin_price'] }"/>
                   <ErrorMessage class="invalid-feedback" name="origin_price" />
                 </div>
                 <div class="mb-3 col-md-6">
                   <label for="price" class="form-label">售價</label>
                   <FieldC type="number" class="form-control" id="price" min="1" label="售價" name="price" rules="required|integer" placeholder="請輸入售價"
-                    v-model="ProductStore.product.price" :max="ProductStore.product.price"  :class="{ 'is-invalid': errors['price'] }"/>
+                    v-model="ProductStore.product.price" :max="ProductStore.product.price" v-bind:class="{ 'is-invalid': errors['price'] }"/>
                   <ErrorMessage class="invalid-feedback" name="price" />
                 </div>
               </div>
@@ -128,7 +128,7 @@
   const DOM = ref(null)
   const prop = defineProps(['product'])
   const ProductStore = useProductStore()
-  const { product }=storeToRefs(ProductStore)
+  const { product } = storeToRefs(ProductStore)
   let modal
 
   onMounted(function () {
@@ -164,6 +164,6 @@
   }
   function hide () { 
     modal.hide()
-    ProductStore.getProducts(1,'admin')
+    ProductStore.getProducts(1, 'admin')
   }
 </script>

@@ -4,8 +4,8 @@
     <div class="row justify-content-center">
       <figure class="col figure">
         <Carousel :items="product.imagesUrl ? [ product.imageUrl, ...product.imagesUrl ] : [ product.imageUrl ]" v-slot="{ items }">
-          <div class="ratio ratio-1x1 carousel-item" v-for="image, index in items" :key="index" :class="{ 'active': index === 0 }">
-            <img :src="image" class="d-block img-fluid" />
+          <div class="ratio ratio-1x1 carousel-item" v-for="image, index in items" v-bind:class="{ 'active': index === 0 }" :key="index">
+            <img class="d-block img-fluid" :src="image" />
           </div>
         </Carousel>
       </figure>
@@ -108,7 +108,7 @@
   onMounted(async function () {
     Promise.all([ getProduct(route.query.id), getProducts(1, 'customer'), getCarts() ])
     .then(function () {
-      isFavorite.value = localStorage.hasOwn('favorite') && localStorage.getItem('favorite').includes(route.query.id)
+      isFavorite.value = localStorage.hasOwnProperty('favorite') && localStorage.getItem('favorite').includes(route.query.id)
     }).catch(function (error) {
       pushMessage('info', '', error)
     })
@@ -116,7 +116,7 @@
 
   function favorite () {
     isFavorite.value = !isFavorite.value
-    let favoriteList = localStorage.hasOwn('favorite') ? JSON.parse(localStorage.getItem('favorite')) : []
+    let favoriteList = localStorage.hasOwnProperty('favorite') ? JSON.parse(localStorage.getItem('favorite')) : []
     if (favoriteList.includes(product.value.id)) {
       favoriteList = favoriteList.filter(f => f !== product.value.id)
       pushMessage('success', '移除最愛成功', `已將${product.value.title}移除最愛`)
