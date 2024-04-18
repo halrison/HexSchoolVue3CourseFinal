@@ -1,7 +1,7 @@
 <template>
   <LoadingC :is-full-page="true" :active="isLoading" />
   <div class="container">
-    <div class=" row">
+    <div class="row">
       <nav class="col-3 bg-light float-start">
         <div class="position-sticky pt-3">
           <p>分類篩選</p>
@@ -13,9 +13,9 @@
           </select>
         </div>
       </nav>
-      <div class="col-9">
+      <div class="col-9 mt-1">
         <div class="card-group row">
-          <div class="col-4" v-for="product in filterProducts" :key="product.id">
+          <div class="col-12 col-md-6 col-lg-4" v-for="product in filterProducts" :key="product.id">
             <ProductCard :product="product" class="mb-3">
               <template #header>
                 <div class="card-header">

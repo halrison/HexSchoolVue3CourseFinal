@@ -4,26 +4,26 @@
     <table class="table table-striped">
       <thead class="sticky-top">
         <tr class="row mx-0">
-          <th class="col-sm-1 col-lg-4">
-            <span class="d-none d-lg-block">訂單編號</span>
-            <span class="d-block d-lg-none">#</span>
+          <th class="col-md-1 col-lg-4">
+            <span class="d-block d-md-none d-lg-block">訂單編號</span>
+            <span class="d-none d-md-block d-lg-none">#</span>
           </th>
-          <th class="col-sm-3 col-lg-2">建立日期</th>
-          <th class="col-sm-3 col-lg-2">付款日期</th>
-          <th class="col-sm-2 col-lg-2 text-md-end">金額</th>
-          <th class="col-sm-3 col-lg-2">動作</th>
+          <th class="col-md-3 col-lg-2">建立日期</th>
+          <th class="col-md-3 col-lg-2">付款日期</th>
+          <th class="col-md-2 col-lg-2 text-lg-end">金額</th>
+          <th class="col-md-3 col-lg-2 text-lg-center">動作</th>
         </tr>
       </thead>
       <tbody>
         <tr class="row mx-0" v-for="order in orders" :key="order.id">
-          <td class="col-sm-1 col-lg-4">
-            <span class="d-none d-lg-block">{{ order.id }}</span>
-            <span class="d-block d-lg-none">{{ order.num }}</span>
+          <td class="col-md-1 col-lg-4">
+            <span class="d-block d-md-none d-lg-block">{{ order.id }}</span>
+            <span class="d-none d-md-block d-lg-none">{{ order.num }}</span>
           </td>
-          <td class="col-sm-3 col-lg-2">{{ new Date(order.create_at * 1000).toLocaleDateString() }}</td>
-          <td class="col-sm-3 col-lg-2">{{ order.paid_date ? new Date(order.paid_date * 1000).toLocaleDateString() : '尚未付款' }}</td>
-          <td class="col-sm-2 col-lg-2 text-md-end">{{ currency(order.total) }}</td>
-          <td class="col-sm-3 col-lg-2 text-md-center">
+          <td class="col-md-3 col-lg-2">{{ new Date(order.create_at * 1000).toLocaleDateString() }}</td>
+          <td class="col-md-3 col-lg-2">{{ order.paid_date ? new Date(order.paid_date * 1000).toLocaleDateString() : '尚未付款' }}</td>
+          <td class="col-md-2 col-lg-2 text-lg-end">{{ currency(order.total) }}</td>
+          <td class="col-md-3 col-lg-2 text-lg-center">
             <button class="btn btn-outline-primary" @click="openModal('view',order.id)">
               <i class="bi bi-eye"></i>
               檢視
@@ -142,3 +142,14 @@
     }
   }
 </script>
+
+<style scoped>
+  @media(width > 768px) {
+    .text-lg-center {
+      text-align: center;
+    }
+    .text-lg-end{
+      text-align: right;
+    }
+  }
+</style>

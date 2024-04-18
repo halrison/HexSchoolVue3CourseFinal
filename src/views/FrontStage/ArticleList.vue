@@ -13,7 +13,7 @@
       </nav>
       <div class="col-9 mt-1">
         <div class="card-group row">
-          <div class="col-6 row" v-for="article in filterArticles || articles" :key="article.id">
+          <div class="col-12 col-md-6 col-lg-4 row" v-for="article in filterArticles || articles" :key="article.id">
             <ArticleCard :article="article" />
           </div>
         </div>

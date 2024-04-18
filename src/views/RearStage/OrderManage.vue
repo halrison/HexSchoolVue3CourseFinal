@@ -3,36 +3,36 @@
   <button class="btn btn-danger float-end mt-1" @click="openModal('clear')">刪除所有訂單</button>
   <div class="table-responsive-sm overflow-x-hidden mt-5">
     <table class="table table-striped">
-      <thead class="sticky-top">
+      <thead class=" sticky-top">
         <tr class="row mx-0">
           <th class="col-sm-1 col-lg-4">
-            <span class="d-none d-lg-block">訂單編號</span>
-            <span class="d-block d-lg-none">#</span>
+            <span class="d-block d-md-none d-lg-block">訂單編號</span>
+            <span class="d-none d-md-block d-lg-none">#</span>
           </th>
           <th class="col-sm-3 col-lg-2">建立日期</th>
           <th class="col-sm-3 col-lg-2">付款日期</th>
-          <th class="col-sm-2 col-lg-2 text-md-end">付款金額</th>
+          <th class="col-sm-2 col-lg-2 text-lg-end">付款金額</th>
           <th class="col-sm-3 col-lg-2">動作</th>
         </tr>
       </thead>
       <tbody>
         <tr class="row mx-0" v-for="order in orders" :key="order.id">
           <td class="col-sm-1 col-lg-4">
-            <span class="d-none d-lg-block">{{ order.id }}</span>
-            <span class="d-block d-lg-none">{{ order.num }}</span>
+            <span class="d-block d-md-none d-lg-block">{{ order.id }}</span>
+            <span class="d-none d-md-block d-lg-none">{{ order.num }}</span>
           </td>
           <td class="col-sm-3 col-lg-2">{{ new Date(order.create_at * 1000).toLocaleDateString() }}</td>
           <td class="col-sm-3 col-lg-2">{{ order.paid_date ? new Date(order.paid_date * 1000).toLocaleDateString() : '尚未付款' }}</td>
-          <td class="col-sm-2 col-lg-2 text-md-end">{{ currency(order.total) }}</td>
+          <td class="col-sm-2 col-lg-2 text-lg-end">{{ currency(order.total) }}</td>
           <td class="col-sm-3 col-lg-2">
             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
               <button class="btn btn-outline-primary" @click="openModal('edit', order.id)">
                 <i class="bi bi-pencil-square"></i>
-                <span class="d-none d-lg-inline-block">編輯</span>
+                <span class="d-inline-block d-md-none d-xl-inline-block">編輯</span>
               </button>
               <button class="btn btn-outline-danger" @click="openModal('remove', order.id)">
                 <i class="bi bi-trash"></i>
-                <span class="d-none d-lg-inline-block">移除</span>
+                <span class="d-inline-block d-md-none d-xl-inline-block">移除</span>
               </button>
             </div>
           </td>

@@ -7,9 +7,9 @@
         <tr class="row mx-0">
           <th class="col-sm-3 col-lg-2">分類</th>
           <th class="col-sm-9 col-lg-3">產品名稱</th>
-          <th class="col-sm-3 col-lg-2 text-md-end">原價</th>
-          <th class="col-sm-3 col-lg-2 text-md-end">售價</th>
-          <th class="col-sm-3 col-lg-1 text-md-center">狀態</th>
+          <th class="col-sm-3 col-lg-2 text-lg-end">原價</th>
+          <th class="col-sm-3 col-lg-2 text-lg-end">售價</th>
+          <th class="col-sm-3 col-lg-1 text-lg-center">狀態</th>
           <th class="col-sm-3 col-lg-2">動作</th>
         </tr>
       </thead>
@@ -17,9 +17,9 @@
         <tr class="row mx-0" v-for="product in products" :key="product.id">
           <td class="col-sm-3 col-lg-2">{{ product.category }}</td>
           <td class="col-sm-9 col-lg-3">{{ product.title }}</td>
-          <td class="col-sm-3 col-lg-2 text-md-end">{{ currency(product.origin_price) }}</td>
-          <td class="col-sm-3 col-lg-2 text-md-end">{{ currency(product.price) }}</td>
-          <td class="col-sm-3 col-lg-1 text-md-center"
+          <td class="col-sm-3 col-lg-2 text-lg-end">{{ currency(product.origin_price) }}</td>
+          <td class="col-sm-3 col-lg-2 text-lg-end">{{ currency(product.price) }}</td>
+          <td class="col-sm-3 col-lg-1 text-lg-center"
             v-bind:class="product.is_enabled === 1 ? 'text-success' : 'text-danger'">
             {{ product.is_enabled === 1 ? '啟' : '停' }}用
           </td>
@@ -27,11 +27,11 @@
             <div class="btn-group btn-group-sm">
               <button @click="openModal('modify',product.id)" class="btn btn-outline-primary">
                 <i class="bi bi-pencil-square"></i>
-                <span class="d-none d-lg-inline-block">編輯</span>
+                <span class="d-none d-xl-inline-block">編輯</span>
               </button>
               <button @click="openModal('remove',product.id)" class="btn btn-outline-danger">
                 <i class="bi bi-trash"></i>
-                <span class="d-none d-lg-inline-block">移除</span>
+                <span class="d-none d-xl-inline-block">移除</span>
               </button>
             </div>
           </td>
@@ -83,3 +83,14 @@
     }
   }
 </script>
+
+<style>
+@media screen and (768px < width){
+  .text-lg-center{
+    text-align: center;
+  }
+  .text-lg-end{
+    text-align: right;
+  }
+}
+</style>
