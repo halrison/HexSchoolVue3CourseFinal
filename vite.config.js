@@ -9,7 +9,7 @@ export default defineConfig(
   ],
   base:process.env.NODE_ENV==='production' ? '/HexSchoolVue3CourseFinal/' : '',
   build:{
-    outDir:'docs'
+    outDir:'dist'
   },
   resolve: {
     alias: {
