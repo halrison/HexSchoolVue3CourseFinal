@@ -28,7 +28,7 @@
               <i class="bi bi-eye"></i>
               檢視
             </button>
-            <button class="btn btn-outline-info" @click="openModal('pay',order.id)" v-show="!order.paid_date">
+            <button class="btn btn-outline-info ms-1" @click="openModal('pay',order.id)" v-show="!order.paid_date">
               <i class="bi bi-wallet"></i>
               付款
             </button>

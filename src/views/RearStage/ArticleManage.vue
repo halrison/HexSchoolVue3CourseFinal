@@ -22,7 +22,7 @@
             {{ article.isPublic ? '是' : '否' }}
           </td>
           <td class="col-sm-4 col-lg-3">
-            <div class="btn-group">
+            <div class="btn-group btn-group-sm">
               <button class="btn btn-outline-primary" @click="openModal('edit', article.id)">
                 <i class="bi bi-pencil-square"></i>
                 <span class="d-none d-lg-inline-block">編輯</span>

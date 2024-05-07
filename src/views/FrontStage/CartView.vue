@@ -105,7 +105,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="my-1">
+        <div class="my-2">
           <button class="btn btn-primary" type="submit" @submit="validate">前往付款</button>
         </div>
       </div>
