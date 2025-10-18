@@ -1,0 +1,1 @@
+import{m as t,d as a,e as c,h as l,N as s}from"./index-76d5b82d.js";const d={class:"card"},p=["src","alt"],m={__name:"ProductCard",props:["product"],setup(r){const e=t(r.product);return(o,u)=>(a(),c("div",d,[l("img",{src:e.value.imageUrl,class:"card-img-top",alt:e.value.title},null,8,p),s(o.$slots,"header"),s(o.$slots,"body"),s(o.$slots,"footer")]))}};export{m as _};
