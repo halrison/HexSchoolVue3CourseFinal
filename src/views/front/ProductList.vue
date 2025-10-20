@@ -21,15 +21,15 @@
             <ProductCard :product="product" class="mb-3">
               <template #header>
                 <div class="card-header">
-                  <router-link :to="`/product?id=${product.id}`" class="card-title">
-                    <h6 class="card-text">{{ product.title }}</h6>
+                  <router-link :to="`/product?id=${product.id}`" class="text-decoration-none">
+                    <h6 class="text-center">{{ product.title }}</h6>
                   </router-link>
                 </div>
               </template>
               <template #body>
                 <div class="card-body">
                   <div class="card-text" v-if="product.origin_price===product.price">
-                    <p class="text-center">台幣{{ product.price }}元</p>
+                    <div class="text-center">台幣{{ product.price }}元</div>
                   </div>
                   <div class="card-text" v-else>
                     <span class="float-start">原價{{product.origin_price}}元</span>
@@ -39,7 +39,7 @@
               </template>
               <template #footer>
                 <div class="card-footer">
-                  <p class="text-center">剩餘{{ product.num }}{{ product.unit }}</p>
+                  <div class="text-center">剩餘{{ product.num }}{{ product.unit }}</div>
                 </div>
               </template>
             </ProductCard>
