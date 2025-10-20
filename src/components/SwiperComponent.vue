@@ -8,17 +8,18 @@
           </div>
         </template>
         <template #body>
-          <div class="card-body">
-            <span class="card-text float-start">台幣{{ product.price }}元</span>
-            <span class="card-text float-end">
-              <small class="text-muted">剩餘{{ product.num }}{{ product.unit }}</small>
-            </span>
+          <div class="card-body" v-if="product.origin_price===product.price">
+            <p class="text-center">台幣{{ product.price }}元</p>
+          </div>
+          <div class="card-body" v-else>
+            <span class="float-start">原價{{product.origin_price}}元</span>
+            <span class="float-end">特價{{product.price}}元</span>
           </div>
         </template>
         <template #footer>
-          <router-link class="text-decoration-none" :to="`/product?id=${product.id}`">
-            <div class="text-center">點此搶購</div>
-          </router-link>
+          <div class="card-footer">
+            <p class="text-center">剩餘{{ product.num }}{{ product.unit }}</p>
+          </div>
         </template>
       </ProductCard>
     </SwiperSlide>
