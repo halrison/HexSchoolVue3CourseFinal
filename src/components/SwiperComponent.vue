@@ -4,12 +4,12 @@
       <ProductCard :product="product">
         <template #header>
           <div class="card-header">
-            <h5 class="card-title">{{ product.title }}</h5>
+            <h5 class="text-center">{{ product.title }}</h5>
           </div>
         </template>
         <template #body>
           <div class="card-body" v-if="product.origin_price===product.price">
-            <p class="text-center">台幣{{ product.price }}元</p>
+            <div class="text-center">台幣{{ product.price }}元</div>
           </div>
           <div class="card-body" v-else>
             <span class="float-start">原價{{product.origin_price}}元</span>
@@ -18,7 +18,7 @@
         </template>
         <template #footer>
           <div class="card-footer">
-            <p class="text-center">剩餘{{ product.num }}{{ product.unit }}</p>
+            <div class="text-center">剩餘{{ product.num }}{{ product.unit }}</div>
           </div>
         </template>
       </ProductCard>
