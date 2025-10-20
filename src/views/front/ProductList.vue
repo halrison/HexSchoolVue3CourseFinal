@@ -21,7 +21,9 @@
             <ProductCard :product="product" class="mb-3">
               <template #header>
                 <div class="card-header">
-                  <h6 class="card-title">{{ product.title }}</h6>
+                  <router-link :to="`/product?id=${product.id}`" class="card-title">
+                    <h6 class="card-text">{{ product.title }}</h6>
+                  </router-link>
                 </div>
               </template>
               <template #body>
