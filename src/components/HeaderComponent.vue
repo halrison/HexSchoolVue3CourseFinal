@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-    <a href="/" class="navbar-brand ms-2">
+    <a :href="toHome" class="navbar-brand ms-2">
       <img src="@/assets/images/apple-icon.png" width="30" height="24" />
     </a>
     <button @click="toggleShow" ref="myCollapse" class="navbar-toggler" type="button"
@@ -61,7 +61,8 @@
         isActive: false,
         isDesktop: window.innerWidth >= 992,
         cartList: [],
-        collapse: null
+        collapse: null,
+        toHome: process.env.BASE_URL
       };
     },
     mounted () {
