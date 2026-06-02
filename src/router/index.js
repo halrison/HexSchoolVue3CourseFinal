@@ -57,7 +57,7 @@ export default createRouter( {
       path: '/admin',
       name: 'rear',
       component: RearStage,
-      beforeEnter: async () => await guard(),
+        beforeEnter: [guard],
       children: [
         {
           path: 'products',
@@ -82,5 +82,5 @@ export default createRouter( {
       ]
     }
   ],
-  linkActiveClass: 'active'
+  linkActiveClass: 'bg-primary'
 } )

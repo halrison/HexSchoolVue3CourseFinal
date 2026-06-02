@@ -4,7 +4,7 @@
     <div class="text-center">
       <h2 class="mt-3">Zay 生活用品店</h2>
       <p class="text-muted mb-0">你的品味，由你創造</p>
-      <button class="btn btn-dark rounded-0 mt-6" v-on:click="getDiscount">立即搶折扣</button>
+      <button class="btn btn-dark rounded-0 mt-6" v-on:click="scrollDown">立即搶折扣</button>
     </div>
   </div>
   <div class="row mt-4">
@@ -37,7 +37,7 @@
           <p class="me-1 fw-bold my-auto">輸入即享二折優惠</p>
           <input type="text" class="form-control rounded-0" value="anniversity" readonly />
           <div class="input-group-append">
-            <button class="btn btn-dark rounded-0" type="button" v-on:click="copyDiscountCode">
+            <button class="btn btn-dark rounded-0" type="button" v-on:click="copyCoupon">
               複製折扣碼
             </button>
           </div>
@@ -60,10 +60,33 @@
       ArticleCard,
     },
     methods: {
-      getDiscount () {
-        const discountArea = document.getElementById( "discount-area" );
-        discountArea.scrollIntoView( { behavior: "smooth" } );
-      }
+      scrollDown () {
+            const discountArea = document.getElementById( "discount-area" );
+            discountArea.scrollIntoView( { behavior: "smooth" } );
+        },
+        copyCoupon () {
+            const couponCode = document.getElementsByTagName("input")[0].value
+            navigator.clipboard.writeText(couponCode)
+                .then(() => {
+                    this.emitter.emit(
+                        'message',
+                        {
+                            type: 'success',
+                            title: '折扣碼已複製',
+                             content: `折扣碼已複製到剪貼簿`
+                        }
+                    )
+            }).catch(() => {
+                this.emitter.emit(
+                    'message',
+                    {
+                        type: 'danger',
+                        title: '複製失敗',
+                        content: `無法複製折扣碼，請手動複製`
+                    }
+                )
+            })
+        }
     },
     computed: {
       filterProducts () {

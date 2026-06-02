@@ -8,7 +8,7 @@
           </h5>
         </div>
         <div class="modal-body">
-          <p>您要移除{{ type==='購物車' ? item.product.title : item.title }}嗎？</p>
+            <p>您要移除{{ type==='購物車' ? item?.product?.title : type==='訂單'?`訂單編號${item?.id}`:item?.title }}嗎？</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" @click="hideModal">取消</button>
@@ -35,7 +35,7 @@
     },
     methods: {
       remove () {
-        switch ( this.currentType ) {
+        switch ( this.type ) {
           case '商品':
             this.removeProduct()
             break;
@@ -48,59 +48,75 @@
           case '文章':
             this.removeArticle()
             break;
+          case '購物車':
+            this.removeCart()
+            break;
         }
         this.$emit( 'remove' )
-      },
+        },
+        removeCart () {
+            this.$http.delete(this.$props.item.id?`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart/${this.$props.item.id}`: `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/carts`)
+                .then(({data}) => {
+                    if (data.success) {
+                        this.emitter?.emit('message', {title: '移除成功', message: data.message, type: 'success'})
+                        this.hideModal()
+                    } else {
+                        this.emitter?.emit('message', {title: '移除失敗', message: data.message, type: 'warning'})
+                    }
+                }).catch(err => {
+                    this.emitter?.emit('message', {title: '移除發生錯誤', message: err, type: 'danger'})
+                })
+        },
       removeProduct () {
         this.$http.delete( `${ process.env.VUE_APP_API }/api/${ process.env.VUE_APP_PATH }/admin/product/${ this.$props.item.id }` )
           .then( ( { data } ) => {
             if ( data.success ) {
-              this.emitter.emit( 'message', { title: '移除成功', message: data.message, type: 'success' } )
+              this.emitter?.emit( 'message', { title: '移除成功', message: data.message, type: 'success' } )
               this.hideModal()
             } else {
-              this.emitter.emit( 'message', { title: '移除失敗', message: data.message, type: 'warning' } )
+              this.emitter?.emit( 'message', { title: '移除失敗', message: data.message, type: 'warning' } )
             }
           } ).catch( err => {
-            this.emitter.emit( 'message', { title: '移除發生錯誤', message: err.response.data.message, type: 'danger' } )
+            this.emitter?.emit( 'message', { title: '移除發生錯誤', message: err, type: 'danger' } )
           } )
       },
       removeCoupon () {
         this.$http.delete( `${ process.env.VUE_APP_API }/api/${ process.env.VUE_APP_PATH }/admin/coupon/${ this.$props.item.id }` )
           .then( ( { data } ) => {
             if ( data.success ) {
-              this.emitter.emit( 'message', { title: '移除成功', message: data.message, type: 'success' } )
+              this.emitter?.emit( 'message', { title: '移除成功', message: data.message, type: 'success' } )
               this.hideModal()
             } else {
-              this.emitter.emit( 'message', { title: '移除失敗', message: data.message, type: 'warning' } )
+              this.emitter?.emit( 'message', { title: '移除失敗', message: data.message, type: 'warning' } )
             }
           } ).catch( err => {
-            this.emitter.emit( 'message', { title: '移除發生錯誤', message: err.response.data.message, type: 'danger' } )
+            this.emitter?.emit( 'message', { title: '移除發生錯誤', message: err, type: 'danger' } )
           } )
       },
       removeOrder () {
         this.$http.delete( `${ process.env.VUE_APP_API }/api/${ process.env.VUE_APP_PATH }/admin/order/${ this.$props.item.id }` )
           .then( ( { data } ) => {
             if ( data.success ) {
-              this.emitter.emit( 'message', { title: '移除成功', message: data.message, type: 'success' } )
+              this.emitter?.emit( 'message', { title: '移除成功', message: data.message, type: 'success' } )
               this.hideModal()
             } else {
-              this.emitter.emit( 'message', { title: '移除失敗', message: data.message, type: 'warning' } )
+              this.emitter?.emit( 'message', { title: '移除失敗', message: data.message, type: 'warning' } )
             }
           } ).catch( err => {
-            this.emitter.emit( 'message', { title: '移除發生錯誤', message: err.response.data.message, type: 'danger' } )
+            this.emitter?.emit( 'message', { title: '移除發生錯誤', message: err, type: 'danger' } )
           } )
       },
       removeArticle () {
         this.$http.delete( `${ process.env.VUE_APP_API }/api/${ process.env.VUE_APP_PATH }/admin/article/${ this.$props.item.id }` )
           .then( ( { data } ) => {
             if ( data.success ) {
-              this.emitter.emit( 'message', { title: '移除成功', message: data.message, type: 'success' } )
+              this.emitter?.emit( 'message', { title: '移除成功', message: data.message, type: 'success' } )
               this.hideModal()
             } else {
-              this.emitter.emit( 'message', { title: '移除失敗', message: data.message, type: 'warning' } )
+              this.emitter?.emit( 'message', { title: '移除失敗', message: data.message, type: 'warning' } )
             }
           } ).catch( err => {
-            this.emitter.emit( 'message', { title: '移除發生錯誤', message: err.response.data.message, type: 'danger' } )
+            this.emitter?.emit( 'message', { title: '移除發生錯誤', message: err, type: 'danger' } )
           } )
       }
     }

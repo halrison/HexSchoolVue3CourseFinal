@@ -1,4 +1,3 @@
-@import '/src/assets/style/base.css';
 
 #app {
   max-width: 1280px;
@@ -21,7 +20,7 @@ a,
   }
 }
 
-@media (max-width: 1024px) {
+@media (min-width: 1024px) {
   body {
     display: flex;
     place-items: center;

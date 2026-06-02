@@ -2,7 +2,7 @@
   <LoadingC :is-full-page="true" :active="isLoading" />
   <div class="container">
     <div class="row">
-      <nav class="col-3 bg-light float-start">
+      <nav class="col-sm-3 bg-light">
         <div class="position-sticky pt-3">
           <p>標籤篩選</p>
           <p class="form-check" v-for="tag in tags" :key="tag">
@@ -11,9 +11,9 @@
           </p>
         </div>
       </nav>
-      <div class="col-9 mt-1">
+      <div class="col-sm-9 mt-1">
         <div class="card-group row">
-          <div class="col-12 col-md-6 col-lg-4 row" v-for="article in filterArticles" :key="article.id">
+          <div class="col-12 col-md-6 col-lg-4 row" v-for="article in filterArticles.filter(article => !['-NjruxEi0mdTiUdzi3aK', '-NjruxEi0mdTiUdzi3aK '].includes(article.id))" :key="article.id">
             <ArticleCard :article="article" />
           </div>
         </div>

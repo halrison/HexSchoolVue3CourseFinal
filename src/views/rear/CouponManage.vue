@@ -21,10 +21,9 @@
               <td class="col-6 col-lg-2">{{ coupon.title }}</td>
               <td class="col-6 col-lg-3">{{ coupon.code }}</td>
               <td class="col-6 col-lg-3">{{ $filters.transDate(coupon.due_date) }}</td>
-              <td class="col-3 col-lg-1">
-                  <div v-bind:class="coupon.is_enabled === 1 ? 'text-success' : 'text-danger'">
-                      {{ coupon.is_enabled ? '啟' : '停' }}用
-                  </div>
+              <td class="col-3 col-lg-1"
+                  v-bind:class="coupon.is_enabled === 1 ? 'text-success' : 'text-danger'">
+                  {{ coupon.is_enabled ? '啟' : '停' }}用
               </td>
               <td class="col-3 col-lg-1 text-lg-end">{{ coupon.percent }}</td>
               <td class="col-lg-2">

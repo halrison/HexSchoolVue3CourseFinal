@@ -1,10 +1,10 @@
 <template>
-  <main class="container" @message="pushMessage">
-    <Header/>
-    <ToastList />
-    <RouterView />
-    <Footer />
-  </main>
+    <main class="container" @message="pushMessage">
+        <ToastList />
+        <Header />
+        <RouterView />
+        <Footer />
+    </main>
 </template>
 <script>
   import Header from "@/components/HeaderComponent.vue";

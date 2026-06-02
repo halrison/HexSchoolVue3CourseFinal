@@ -1,47 +1,55 @@
 <template>
-  <LoadingC :is-full-page="true" :active="isLoading" />
-  <button type="button" class="btn btn-primary float-end mt-1" @click="openModal('add')">新增商品</button>
-  <div class="table-responsive-sm overflow-x-hidden mt-5">
-    <table class="table table-striped">
-      <thead class="sticky-top">
-        <tr class="row mx-0">
-          <th class="col-sm-3 col-lg-2">分類</th>
-          <th class="col-sm-9 col-lg-3">產品名稱</th>
-          <th class="col-sm-3 col-lg-2 text-lg-end">原價</th>
-          <th class="col-sm-3 col-lg-2 text-lg-end">售價</th>
-          <th class="col-sm-3 col-lg-1 text-lg-center">狀態</th>
-          <th class="col-sm-3 col-lg-2">動作</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="row mx-0" v-for="product in products" :key="product.id">
-          <td class="col-sm-3 col-lg-2">{{ product.category }}</td>
-          <td class="col-sm-9 col-lg-3">{{ product.title }}</td>
-          <td class="col-sm-3 col-lg-2 text-lg-end">{{ $filters.currency(product.origin_price) }}</td>
-          <td class="col-sm-3 col-lg-2 text-lg-end">{{ $filters.currency(product.price) }}</td>
-          <td class="col-sm-3 col-lg-1 text-lg-center"
-              v-bind:class="product.is_enabled === 1 ? 'text-success' : 'text-danger'">
-            {{ product.is_enabled === 1 ? '啟' : '停' }}用
-          </td>
-          <td class="col-sm-3 col-lg-2">
-            <div class="btn-group btn-group-sm">
-              <button @click="openModal('modify',product)" class="btn btn-outline-primary">
-                <i class="bi bi-pencil-square"></i>
-                <span class="d-none d-xl-inline-block">編輯</span>
-              </button>
-              <button @click="openModal('remove',product)" class="btn btn-outline-danger">
-                <i class="bi bi-trash"></i>
-                <span class="d-none d-xl-inline-block">移除</span>
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <Pagination :pagination="pagination" v-show="pagination.total_pages > 1" @paginate="getProducts" />
-  <ProductModal :product="product" ref="addEditModal" @add-edit="addEditProduct" />
-  <RemoveModal :item="product" type="商品" ref="removeModal" @remove="getProducts"/>
+    <div class="container">
+        <div class="d-flex justify-content-end me-1">
+            <button type="button" class="btn btn-outline-info mt-2" @click="openModal('add')">
+                <i class="bi bi-plus me-1"></i>
+                新增商品
+            </button>
+        </div>
+        <LoadingC :is-full-page="true" :active="isLoading" />
+        <div class="table-responsive-sm overflow-x-hidden mt-3">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="row mx-0">
+                        <th class="col-4 col-lg-2">分類</th>
+                        <th class="col-8 col-lg-4">產品名稱</th>
+                        <th class="col-4 col-sm-3 col-lg-1 text-lg-end">原價</th>
+                        <th class="col-4 col-sm-3 col-lg-1 text-lg-end">售價</th>
+                        <th class="col-4 col-sm-2 col-lg-1 text-lg-center">狀態</th>
+                        <th class="col-sm-4 col-lg-3 text-center">動作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="row mx-0" v-for="product in products" :key="product.id">
+                        <td class="col-4 col-lg-2">{{ product.category }}</td>
+                        <td class="col-8 col-lg-4">{{ product.title }}</td>
+                        <td class="col-4 col-sm-3 col-lg-1 text-lg-end">{{ $filters.currency(product.origin_price) }}</td>
+                        <td class="col-4 col-sm-3 col-lg-1 text-lg-end">{{ $filters.currency(product.price) }}</td>
+                        <td class="col-4 col-sm-2 col-lg-1 text-lg-center">
+                            <div v-bind:class="product.is_enabled === 1 ? 'text-success' : 'text-danger'">
+                                {{ product.is_enabled === 1 ? '啟' : '停' }}用
+                            </div>
+                        </td>
+                        <td class="col-sm-4 col-lg-3">
+                            <div class="btn-group btn-group-sm w-100">
+                                <button @click="openModal('modify',product)" class="btn btn-outline-warning">
+                                    <i class="bi bi-pencil-square me-1"></i>
+                                    編輯
+                                </button>
+                                <button @click="openModal('remove',product)" class="btn btn-outline-danger">
+                                    <i class="bi bi-trash me-1"></i>
+                                    移除
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <Pagination :pagination="pagination" v-show="pagination.total_pages > 1" @paginate="getProducts" />
+        <ProductModal :product="product" ref="addEditModal" @add-edit="addEditProduct" />
+        <RemoveModal :item="product" type="商品" ref="removeModal" @remove="getProducts" />
+    </div>
 </template>
 <script>
   import Pagination from '@/components/PaginationBar.vue'

@@ -3,11 +3,11 @@
     <div class="carousel-inner ">
       <slot :items="items"></slot>
     </div>
-    <button class="carousel-control-prev" type="button" @click="prev">
+    <button class="carousel-control-prev" type="button" @click="prev" v-if="items.length>1">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" @click="next">
+    <button class="carousel-control-next" type="button" @click="next" v-if="items.length>1">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
     </button>

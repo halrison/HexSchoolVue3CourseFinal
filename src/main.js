@@ -2,6 +2,11 @@ import { createApp } from 'vue'
 import { Form, Field, ErrorMessage, defineRule, configure, FieldArray } from 'vee-validate'
 import { localize, setLocale } from '@vee-validate/i18n'
 import { all as VeeValidateRules } from '@vee-validate/rules'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons'
+import { fab } from '@fortawesome/free-brands-svg-icons'
 import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json'
 import Loading from 'vue3-loading-overlay'
 import axios from 'axios'
@@ -17,9 +22,12 @@ configure( {
   validateOnInput: true
 } )
 setLocale( 'zh_TW' )
+library.add(fas, far, fab)
+
 const app = createApp( App )
 app.use( router )
 app.use( VueAxios, axios )
+app.component('font-awesome-icon', FontAwesomeIcon)
 app.component( 'LoadingC', Loading )
 app.component( 'FormC', Form )
 app.component( 'FieldC', Field )

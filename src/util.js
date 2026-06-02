@@ -1,16 +1,16 @@
 import mitt from "mitt"
 import axios from "axios"
-const currency = num => {
+export const currency = num => {
   const n = parseInt( num, 10 );
   return `${ n.toFixed( 0 ).replace( /./g, ( c, i, a ) => ( i && c !== '.' && ( ( a.length - i ) % 3 === 0 ) ? `, ${ c }`.replace( /\s/g, '' ) : c ) ) }`;
 }
 
-const transDate = date => {
+export const transDate = date => {
   const localDate = new Date( date )
   return localDate.toISOString().slice( 0, 10 )
   }
-const emitter = mitt()
-function addImage ( tempUrl, callback ) {
+export const emitter = mitt()
+export function addImage ( tempUrl, callback ) {
   const image = new Image()
   image.src = tempUrl
   image.onload = function () {
@@ -21,9 +21,8 @@ function addImage ( tempUrl, callback ) {
     emitter.emit( 'message', { type: 'warning', title: '上傳圖片失敗', content: '此網址並非圖片' } )
   }
 }
-function uploadImage ( files, callback ) {
+export function uploadImage ( file, callback ) {
   const form = new FormData
-  let file = files[ 0 ]
   if ( file ) {
     form.append( 'image', file )
     axios.post(
@@ -48,4 +47,3 @@ function uploadImage ( files, callback ) {
   file = {}
 }
 
-export { addImage, currency, emitter, transDate, uploadImage }

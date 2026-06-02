@@ -2,7 +2,7 @@
   <LoadingC :is-full-page="true" :active="isLoading" />
   <div class="container">
     <div class="row">
-      <nav class="col-3 bg-light float-start">
+      <nav class="col-sm-3 bg-light float-start">
         <div class="position-sticky pt-3 h-100">
           <p>分類篩選</p>
           <select class="form-select" v-model="selected">
@@ -15,7 +15,7 @@
           </select>
         </div>
       </nav>
-      <div class="col-9 mt-1">
+      <div class="col-sm-9 mt-1">
         <div class="card-group row">
           <div class="col-12 col-md-6 col-lg-4" v-for="product in filterProducts" :key="product.id">
             <ProductCard :product="product" class="mb-3">

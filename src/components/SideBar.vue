@@ -1,10 +1,10 @@
 <template>
     <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top h-100 d-flex flex-lg-column">
-        <span class="navbar-brand d-flex align-items-center">
-            <img src="@\assets\images\apple-icon.png" width="30" height="30" class="mx-1" />
+        <span class="navbar-brand">
+            <img src="@\assets\images\apple-icon.png" width="30" height="30" />
             後臺管理系統
         </span>
-        <button class="navbar-toggler float-end me-1" type="button"
+        <button class="navbar-toggler float-end" type="button"
                 @click="offcanvas.show()">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -14,48 +14,38 @@
                 <button type="button" class="btn-close" @click="offcanvas.hide()"></button>
             </div>
             <div class="offcanvas-body">
-                <ul class="nav nav-pills flex-column">
-                    <li class="nav-item mt-1">
-                        <router-link to="/admin/products" class="nav-link">
-                            <div class="text-center text-muted">
-                                <font-awesome-icon icon="fa-brands fa-product-hunt" />
-                                商品
-                            </div>
+                <div class="nav nav-pills d-grid gap-2 pe-3">
+                    <div class="nav-item">
+                        <router-link to="/admin/products" class="text-center text-muted nav-link">
+                            <font-awesome-icon icon="fa-brands fa-product-hunt" />
+                            商品
                         </router-link>
-                    </li>
-                    <li class="nav-item mt-1">
-                        <router-link to="/admin/coupon" class="nav-link">
-                            <div class="text-center text-muted">
-                                <i class="bi bi-box-arrow-in-right" />
-                                優惠券
-                            </div>
+                    </div>
+                    <div class="nav-item">
+                        <router-link to="/admin/coupon" class="text-center text-muted nav-link">
+                            <i class="bi bi-box-arrow-in-right" />
+                            優惠券
                         </router-link>
-                    </li>
-                    <li class="nav-item mt-1">
-                        <router-link to="/admin/order" class="nav-link">
-                            <div class="text-center text-muted">
-                                <i class="bi bi-sticky"></i>
-                                訂單
-                            </div>
+                    </div>
+                    <div class="nav-item">
+                        <router-link to="/admin/order" class="text-center text-muted nav-link">
+                            <i class="bi bi-sticky"></i>
+                            訂單
                         </router-link>
-                    </li>
-                    <li class="nav-item mt-1">
-                        <router-link to="/admin/article" class="nav-link">
-                            <div class="text-center text-muted">
-                                <i class="bi bi-cart" />
-                                文章
-                            </div>
+                    </div>
+                    <div class="nav-item">
+                        <router-link to="/admin/article" class="text-center text-muted nav-link">
+                            <i class="bi bi-cart" />
+                            文章
                         </router-link>
-                    </li>
-                    <li class="nav-item mt-1">
+                    </div>
+                    <div class="nav-item">
                         <button class="btn btn-danger w-100" type="button" @click="logout">
-                            <div class="text-center text-muted">
-                                <i class="bi bi-box-arrow-right"></i>
-                                登出
-                            </div>
+                            <i class="bi bi-box-arrow-right"></i>
+                            登出
                         </button>
-                    </li>
-                </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>

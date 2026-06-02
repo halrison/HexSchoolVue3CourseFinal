@@ -8,26 +8,26 @@
         <table class="table table-striped">
             <thead>
                 <tr class="row mx-0">
-                    <th class="col-8 col-sm-1 col-xl-4">
-                        <span class="d-block d-sm-none d-xl-block">訂單編號</span>
-                        <span class="d-none d-sm-block d-xl-none">#</span>
+                    <th class="col-8 col-sm-1 col-lg-4">
+                        <span class="d-block d-sm-none d-lg-block">訂單編號</span>
+                        <span class="d-none d-sm-block d-lg-none">#</span>
                     </th>
-                    <th class="col-4 col-sm-2 text-end">付款金額</th>
-                    <th class="col-6 col-sm-3 col-xl-2">建立日期</th>
-                    <th class="col-6 col-sm-3 col-xl-2">付款日期</th>
-                    <th class=" col-sm-3 col-xl-2 text-center">動作</th>
+                    <th class="col-4 col-sm-2 col-lg-2 text-end">付款金額</th>
+                    <th class="col-6 col-sm-3 col-lg-2">建立日期</th>
+                    <th class="col-6 col-sm-3 col-lg-2">付款日期</th>
+                    <th class=" col-sm-3 col-lg-2 text-center">動作</th>
                 </tr>
             </thead>
             <tbody>
                 <tr class="row mx-0" v-for="order in orders" :key="order.id">
-                    <td class="col-8 col-sm-1 col-xl-3">
-                        <span class="d-block d-sm-none d-xl-block">{{ order.id }}</span>
-                        <span class="d-none d-sm-block d-xl-none">{{ order.num }}</span>
+                    <td class="col-8 col-sm-1 col-lg-4">
+                        <span class="d-block d-sm-none d-lg-block">{{ order.id }}</span>
+                        <span class="d-none d-sm-block d-lg-none">{{ order.num }}</span>
                     </td>
-                    <td class="col-4 col-sm-2 col-xl-2 text-end">{{ $filters.currency(order.total) }}</td>
-                    <td class="col-6 col-sm-3 col-xl-2">{{ order.create_at ? $filters.transDate(order.create_at * 1000) : '-' }}</td>
-                    <td class="col-6 col-sm-3 col-xl-2">{{ order.paid_date ? $filters.transDate(order.paid_date * 1000) : '尚未付款' }}</td>
-                    <td class=" col-sm-3 col-xl-2 text-center">
+                    <td class="col-4 col-sm-2 col-lg-2 text-end">{{ $filters.currency(order.total) }}</td>
+                    <td class="col-6 col-sm-3 col-lg-2">{{ order.create_at ? $filters.transDate(order.create_at * 1000) : '-' }}</td>
+                    <td class="col-6 col-sm-3 col-lg-2">{{ order.paid_date ? $filters.transDate(order.paid_date * 1000) : '尚未付款' }}</td>
+                    <td class=" col-sm-3 col-lg-2 text-center">
                         <div class="btn-group btn-group-sm w-100" role="group" aria-label="Basic example">
                             <button class="btn btn-outline-warning" @click="openModal('edit', order.id)">
                                 <i class="bi bi-pencil-square"></i>
