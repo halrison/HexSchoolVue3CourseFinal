@@ -1,106 +1,101 @@
 <template>
-  <nav class="navbar navbar-light bg-light sticky-top">
-    <a href="/admin" class="text-primary navbar-brand ms-2">
-      <img src="@/assets/images/apple-icon.png" width="30" height="24" />
-      <h6 class="d-inline-block ms-1">後臺管理系統</h6>
-    </a>
-    <button @click="toggleShow" v-bind:class="isDesktop ? 'invisible' : 'visible'" ref="myCollapse" class="navbar-toggler" type="button"
-            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div id="navbarNavAltMarkup" class=" navbar-collapse vh-100" v-bind:class="isActive || isDesktop ? '' : 'collapse'">
-      <div class="nav flex-column">
-        <router-link to="/admin/products" class="text-center text-secondary nav-link" @click="toggleShow">
-          <i class="fa-brands fa-product-hunt"></i>
-          商品
-        </router-link>
-        <router-link to="/admin/coupon" class="text-center text-secondary nav-link" @click="toggleShow">
-          <i class="bi bi-box-arrow-in-right"></i>
-          優惠券
-        </router-link>
-        <router-link to="/admin/order" class="text-center text-secondary nav-link" @click="toggleShow">
-          <i class="fa-solid fa-note-sticky"></i>
-          訂單
-        </router-link>
-        <router-link to="/admin/article" class="text-center text-secondary nav-link" @click="toggleShow">
-          <i class="bi bi-cart"></i>
-          文章
-        </router-link>
-        <div class="d-grid gap-2">
-          <button class="btn btn-danger" type="button" @click="logout">登出</button>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top h-100 d-flex flex-lg-column">
+        <span class="navbar-brand d-flex align-items-center">
+            <img src="@\assets\images\apple-icon.png" width="30" height="30" class="mx-1" />
+            後臺管理系統
+        </span>
+        <button class="navbar-toggler float-end me-1" type="button"
+                @click="offcanvas.show()">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" ref="OffcanvasNavbar" aria-labelledby="OffcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="OffcanvasNavbarLabel">後台管理系統</h5>
+                <button type="button" class="btn-close" @click="offcanvas.hide()"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item mt-1">
+                        <router-link to="/admin/products" class="nav-link">
+                            <div class="text-center text-muted">
+                                <font-awesome-icon icon="fa-brands fa-product-hunt" />
+                                商品
+                            </div>
+                        </router-link>
+                    </li>
+                    <li class="nav-item mt-1">
+                        <router-link to="/admin/coupon" class="nav-link">
+                            <div class="text-center text-muted">
+                                <i class="bi bi-box-arrow-in-right" />
+                                優惠券
+                            </div>
+                        </router-link>
+                    </li>
+                    <li class="nav-item mt-1">
+                        <router-link to="/admin/order" class="nav-link">
+                            <div class="text-center text-muted">
+                                <i class="bi bi-sticky"></i>
+                                訂單
+                            </div>
+                        </router-link>
+                    </li>
+                    <li class="nav-item mt-1">
+                        <router-link to="/admin/article" class="nav-link">
+                            <div class="text-center text-muted">
+                                <i class="bi bi-cart" />
+                                文章
+                            </div>
+                        </router-link>
+                    </li>
+                    <li class="nav-item mt-1">
+                        <button class="btn btn-danger w-100" type="button" @click="logout">
+                            <div class="text-center text-muted">
+                                <i class="bi bi-box-arrow-right"></i>
+                                登出
+                            </div>
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </div>
-      </div>
-    </div>
-  </nav>
+    </nav>
 </template>
+
 <script>
-  import { Collapse } from 'bootstrap'
-  export default {
-    name: 'SideBar',
-    inject: [ 'emitter' ],
-    methods: {
-      toggleShow () {
-        if ( !this.isDesktop ) {
-          this.isActive = !this.isActive
-          if ( this.isActive ) {
-            this.collapse.show()
-          } else {
-            this.collapse.hide()
-          }
+    import {Offcanvas} from "bootstrap"
+    export default {
+        name: 'SideBar',
+        inject: ['emitter'],
+        methods: {
+            logout () {
+                this.$http(`${process.env.VUE_APP_API}/logout`, {
+                    method: 'POST',
+                })
+                    .then(() => {
+                        this.$router.push('/login')
+                    })
+                    .catch(err => {
+                        this.emitter.emit('message', {type: 'danger', title: '登入失敗', content: err.message})
+                    })
+            }
+        },
+        watch: {
+            $route () {
+                if (document.body.offsetWidth < 992) {
+                    this.offcanvas?.hide();
+                }
+            }
+        },
+        data () {
+            return {
+                offcanvas: {}
+            }
+        },
+        mounted () {
+            this.offcanvas = new Offcanvas(
+                this.$refs.OffcanvasNavbar,
+                {backdrop: true}
+            )
         }
-      },
-      logout () {
-        this.$http.post( `${ process.env.VUE_APP_API }/logout`, {
-          method: 'POST',
-          //  headers: {
-          //    'Content-Type': 'application/json'
-          //  },
-          //  credentials: 'include'
-        } )
-          .then( () => {
-            this.$router.push( '/login' )
-          } )
-          .catch( err => {
-            this.emitter.emit( 'message', { type: 'danger', title: '登入失敗', content: err.message } )
-          } )
-      }
-    },
-    watch: {
-      screenWidth ( newWidth ) {
-        if ( newWidth >= 992 ) {
-          this.isActive = true
-          this.isDesktop = true
-        } else {
-          this.isDesktop = false
-          this.isActive = false
-        }
-      }
-    },
-    mounted () {
-      this.isDesktop = this.screenWidth >= 992
-      this.collapse = new Collapse(
-        this.$refs.myCollapse,
-        {
-          toggle: this.isActive
-        }
-      )
-      window.addEventListener( 'resize', () => {
-        this.screenWidth = window.innerWidth
-        this.isDesktop = this.screenWidth >= 992
-      } )
-    },
-    data () {
-      return {
-        isActive: false,
-        isDesktop: false,
-        screenWidth: window.innerWidth,
-        collapse: null
-      }
     }
-  }
 </script>
-<style scoped>
-  .active {
-    background-color: aqua;
-  }
-</style>

@@ -1,13 +1,15 @@
 <template>
-  <div class="row">
-    <div class="col-sm-3">
-      <SideBar />
+    <div class="container vh-100">
+        <div class="row">
+            <aside class="col-lg-3 col-xl-2 ms-sm-auto px-md-1">
+                <SideBar />
+            </aside>
+            <main class="col-lg-9 col-xl-10 ms-sm-auto px-md-1">
+                <ToastList />
+                <router-view />
+            </main>
+        </div>
     </div>
-    <main class="col-9 ms-sm-auto px-md-4">
-      <ToastList />
-      <router-view />
-    </main>
-  </div>
 </template>
 <script>
   import ToastList from '@/components/ToastList.vue'
