@@ -82,5 +82,5 @@ export default createRouter( {
       ]
     }
   ],
-  linkActiveClass: 'bg-primary'
+  linkActiveClass: 'bg-success bg-opacity-50 text-black'
 } )

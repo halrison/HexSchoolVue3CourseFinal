@@ -3,9 +3,5 @@ $bootstrap-icons-font-dir: "bootstrap-icons/font/fonts";
 @import "~bootstrap-icons/font/bootstrap-icons";
 @import "~@fortawesome/fontawesome-free/scss/fontawesome";
 @import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
-@media screen and (min-width:768px){
-	@import "./main.css"; 
-}
-@media screen and (max-width:767px){
-    @import "./base.css";
-}
+@import "@/assets/style/main.css";
+@import "@/assets/style/base.css";

@@ -14,38 +14,38 @@
                 <button type="button" class="btn-close" @click="offcanvas.hide()"></button>
             </div>
             <div class="offcanvas-body">
-                <div class="nav nav-pills d-grid gap-2 pe-3">
-                    <div class="nav-item">
-                        <router-link to="/admin/products" class="text-center text-muted nav-link">
+                <ul class="nav nav-pills d-grid gap-2 pe-3">
+                    <li class="nav-item">
+                        <router-link to="/admin/products" class="text-center text-dark nav-link">
                             <font-awesome-icon icon="fa-brands fa-product-hunt" />
                             商品
                         </router-link>
-                    </div>
-                    <div class="nav-item">
-                        <router-link to="/admin/coupon" class="text-center text-muted nav-link">
-                            <i class="bi bi-box-arrow-in-right" />
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/admin/coupon" class="text-center text-dark nav-link">
+                            <i class="bi bi-percent" />
                             優惠券
                         </router-link>
-                    </div>
-                    <div class="nav-item">
-                        <router-link to="/admin/order" class="text-center text-muted nav-link">
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/admin/order" class="text-center text-dark nav-link">
                             <i class="bi bi-sticky"></i>
                             訂單
                         </router-link>
-                    </div>
-                    <div class="nav-item">
-                        <router-link to="/admin/article" class="text-center text-muted nav-link">
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/admin/article" class="text-center text-dark nav-link">
                             <i class="bi bi-cart" />
                             文章
                         </router-link>
-                    </div>
-                    <div class="nav-item">
+                    </li>
+                    <li class="nav-item">
                         <button class="btn btn-danger w-100" type="button" @click="logout">
                             <i class="bi bi-box-arrow-right"></i>
                             登出
                         </button>
-                    </div>
-                </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>

@@ -11,37 +11,38 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="row" v-for="cart in cartList" :key="cart.id">
-                    <td class="col-3 col-md-2">
-                        <button type="button" class="btn btn-outline-danger" @click="removeCart(cart.id)">
-                            <i class="bi bi-cart-x-fill"></i>
-                            <span class="d-none d-sm-inline-block ms-1">刪除</span>
-                        </button>
-                    </td>
-                    <td class="col-9 col-md-5">{{ cart.product.title }}</td>
-                    <td class="col-6 col-md-3 text-end">
-                        <div class="input-group d-inline-block">
-                            <div class="input-group bg-light rounded">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-outline-dark border-0 py-2" type="button" @click="editCart(cart.id, cart.qty - 1)" v-bind:disabled="cart.qty < 2">
-                                        <i class="bi bi-dash"></i>
-                                    </button>
-                                </div>
-                                <input type="text" class="form-control border-0 text-center my-auto shadow-none bg-light" required min="1"
-                                       aria-label="Example text with button addon" aria-describedby="button-addon1"
-                                       v-model.number="cart.qty" v-bind:class="{ 'is-invalid': !cart.qty || cart.qty.toString().includes('.') }" @change="editCart(cart.id, cart.qty)" />
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-dark border-0 py-2" type="button" @click="editCart(cart.id, cart.qty + 1)">
-                                        <i class="bi-plus bi"></i>
-                                    </button>
+                <FieldArray name="cartList">
+                    <tr class="row" v-for="cart,idx in cartList" :key="cart.id">
+                        <td class="col-3 col-md-2">
+                            <button type="button" class="btn btn-outline-danger" @click="removeCart(cart.id)">
+                                <i class="bi bi-cart-x-fill"></i>
+                                <span class="d-none d-sm-inline-block ms-1">刪除</span>
+                            </button>
+                        </td>
+                        <td class="col-9 col-md-5">{{ cart.product.title }}</td>
+                        <td class="col-6 col-md-3 text-end">
+                            <div class="input-group d-inline-block">
+                                <div class="input-group bg-light rounded">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-dark border-0 py-2" type="button" @click="editCart(cart.id, cart.qty - 1)" v-bind:disabled="cart.qty < 2">
+                                            <i class="bi bi-dash"></i>
+                                        </button>
+                                    </div>
+                                    <FieldC class="form-control border-0 text-center my-auto shadow-none bg-light" rules="required|integer|min:1"
+                                            aria-label="Example text with button addon" aria-describedby="button-addon1" :name="`cartList[${idx}].qty`"
+                                            v-model.number="cart.qty" v-bind:class="{ 'is-invalid': errors[`cartList[${idx}].qty`] }" @change="editCart(cart.id, cart.qty)" />
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-dark border-0 py-2" type="button" @click="editCart(cart.id, cart.qty + 1)">
+                                            <i class="bi-plus bi"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <span v-if="!cart.qty" class="text-danger">商品數量為必填</span>
-                        <span v-else-if="cart.qty.toString().includes('.')" class="text-danger">商品數量需為整數</span>
-                    </td>
-                    <td class="col-6 col-md-2 text-end">{{ $filters.currency(cart.total) }}</td>
-                </tr>
+                            <ErrorMessage :name="`cartList[${idx}].qty`" class="invalid-feedback" />
+                        </td>
+                        <td class="col-6 col-md-2 text-end">{{ $filters.currency(cart.total) }}</td>
+                    </tr>
+                </FieldArray>
             </tbody>
             <tfoot>
                 <tr class="row" v-if="final_total === total">
@@ -62,7 +63,7 @@
         <div class="d-block d-sm-none">
             <div class="input-group mb-1">
                 <label class="input-group-text" for="code">輸入優惠碼</label>
-                <input class="form-control" type="text" id="code" v-model="code" />
+                <FieldC class="form-control" id="code" v-model="code" name="code" />
             </div>
             <div class="btn-group w-100">
                 <button class="btn btn-secondary" @click="applyCoupon(code)">
@@ -78,7 +79,7 @@
         <div class=" d-none d-sm-block">
             <div class="input-group">
                 <label class="input-group-text" for="code">輸入優惠碼</label>
-                <input class="form-control" type="text" id="code" v-model="code" />
+                <FieldC class="form-control" name="code" id="code" v-model="code" />
                 <button class="btn btn-secondary" @click="applyCoupon(code)">
                     <i class="bi bi-percent"></i>
                     套用優惠碼
@@ -94,40 +95,40 @@
             <div class="row">
                 <div class="col-4">姓名</div>
                 <div class="col-8">
-                    <FieldC class="form-control" rules="required" name="name" label="姓名" v-model="user.name" v-bind:class="{ 'is-invalid': errors['name'] }" />
+                    <FieldC class="form-control" rules="required" name="name" label="姓名" v-model="user.name" v-bind:class="{ 'is-invalid': errors.name}" />
                     <ErrorMessage class="text-danger" name="name" />
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-1">
                 <div class="col-4">地址</div>
                 <div class="col-8">
-                    <FieldC class="form-control" rules="required" name="address" label="地址" v-model="user.address" v-bind:class="{ 'is-invalid': errors['address'] }" />
+                    <FieldC class="form-control" rules="required" name="address" label="地址" v-model="user.address" v-bind:class="{ 'is-invalid': errors.address}" />
                     <ErrorMessage class="text-danger" name="address" />
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-1">
                 <div class="col-4">電話</div>
                 <div class="col-8">
-                    <FieldC class="form-control" :rules="isPhone" name="tel" label="電話" v-model="user.tel" v-bind:class="{ 'is-invalid': errors['tel'] }" />
+                    <FieldC class="form-control" :rules="isPhone" name="tel" label="電話" v-model="user.tel" v-bind:class="{ 'is-invalid': errors.tel }" />
                     <ErrorMessage class="text-danger" name="tel" />
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-1">
                 <div class="col-4">電子信箱</div>
                 <div class="col-8">
-                    <FieldC class="form-control" name="email" rules="required|email" label="電子信箱" v-model="user.email" v-bind:class="{ 'is-invalid': errors['email'] }" />
+                    <FieldC class="form-control" name="email" rules="required|email" label="電子信箱" v-model="user.email" v-bind:class="{ 'is-invalid': errors.email }" />
                     <ErrorMessage class="text-danger" name="email" />
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-1">
                 <div class="col-4">留言</div>
                 <div class="col-8">
-                    <textarea class="form-control" v-model="message" rows="2" cols="20"></textarea>
+                    <FieldC as="textarea" class="form-control" v-model="message" rows="2" cols="20" name="message"/>
                 </div>
             </div>
             <div class="row">
                 <div class="my-2">
-                    <button class="btn btn-primary w-50" type="submit" @submit="validate">前往付款</button>
+                    <input class="btn btn-primary w-50" type="submit" @click="validate" value="前往付款" />
                 </div>
             </div>
         </div>
@@ -173,15 +174,14 @@
                 this.$refs.modal.showModal();
             },
             editCart (id, qty) {
-                if (qty < 1 || qty.toString().includes('.')) {
-                    return;
-                }
                 this.isLoading = true;
                 this.$http.put(
                     `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/cart/${id}`,
                     {
-                        product_id: id,
-                        qty
+                        data: {
+                            product_id: id,
+                            qty
+                        }
                     }).then(res => {
                         if (res.data.success) {
                             this.emitter.emit('message', {type: 'success', title: '編輯購物車成功', content: res.data.message});
@@ -205,7 +205,7 @@
                 };
                 this.$http.post(
                     `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/order`,
-                    {data:order}
+                    {data: order}
                 ).then((res) => {
                     if (res.data.success) {
                         this.emitter.emit('message', {type: 'success', title: '送出訂單成功', content: res.data.message});

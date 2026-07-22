@@ -10,31 +10,31 @@
              v-bind:class="isActive || isDesktop ? 'show' : ''">
             <ul class="navbar-nav nav-pills">
                 <li class="nav-item">
-                    <router-link to="/articles" class="text-muted nav-link" @click="toggleShow">
+                    <router-link to="/articles" class="text-opacity-75 nav-link" @click="toggleShow">
                         <i class="bi bi-newspaper mx-1"></i>
                         文章
                     </router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link to="/login" class="text-muted nav-link" @click="toggleShow">
+                    <router-link to="/login" class="text-opacity-75 nav-link" @click="toggleShow">
                         <i class="bi bi-box-arrow-in-right mx-1"></i>
                         登入
                     </router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link to="/products" class="text-muted nav-link" @click="toggleShow">
+                    <router-link to="/products" class="text-opacity-75 nav-link" @click="toggleShow">
                         <font-awesome-icon icon="fa-brands fa-product-hunt" class="mx-1" />
                         商品
                     </router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link to="/order" class="text-muted nav-link" @click="toggleShow">
+                    <router-link to="/order" class="text-opacity-75 nav-link" @click="toggleShow">
                         <i class="bi bi-sticky mx-1"></i>
                         訂單
                     </router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link to="/cart" class="text-muted nav-link position-relative" @click="toggleShow">
+                    <router-link to="/cart" class="text-opacity-75 nav-link position-relative" @click="toggleShow">
                         <i class="bi bi-cart mx-1"></i>
                         <span class="position-absolute top-0 start-10 translate-middle badge rounded-pill bg-danger text-dark" v-if="cartList?.length">{{ cartList.length }}</span>
                         購物車
