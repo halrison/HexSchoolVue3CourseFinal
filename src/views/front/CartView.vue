@@ -137,7 +137,6 @@
     <h1 class="text-center vh-100" v-else>未選購任何商品</h1>
 </template>
 <script>
-    import RemoveModal from '@/components/RemoveModal.vue';
     export default {
         name: 'CartView',
         inject: ['emitter'],
