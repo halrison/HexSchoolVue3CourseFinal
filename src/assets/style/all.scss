@@ -1,0 +1,7 @@
+$bootstrap-icons-font-dir: "bootstrap-icons/font/fonts";
+@import "bootstrap/scss/bootstrap";
+@import "bootstrap-icons/font/bootstrap-icons";
+@import "@fortawesome/fontawesome-free/scss/fontawesome";
+@import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
+@import "./main.css"; 
+@import "./base.css";
