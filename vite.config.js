@@ -13,5 +13,5 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
-    base: import.meta.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'production' ? '/Vue3CourseFinal/' : '/'
+    base: import.meta.env?.mode === 'production' || process.env?.NODE_ENV === 'production' ? '/Vue3CourseFinal/' : '/'
 })
