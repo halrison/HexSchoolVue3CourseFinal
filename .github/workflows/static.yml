@@ -17,10 +17,12 @@ permissions:
 concurrency:
   group: "pages"
   cancel-in-progress: false
-
 jobs:
   # Build job
   build:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,6 +35,9 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Build with Node.js
         run: npm run build
+        env:
+            VITE_API: ${{vars.VITE_API}}
+            VITE_PATH: ${{vars.VITE_PATH}}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
