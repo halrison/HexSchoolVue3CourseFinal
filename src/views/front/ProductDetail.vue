@@ -76,97 +76,161 @@
   </div>
 </template>
 <script>
-    import {useRoute} from 'vue-router'
-  import Carousel from '@/components/CarouselComponent.vue'
+    import Carousel from '@/components/CarouselComponent.vue'
     import Swiper from '@/components/SwiperComponent.vue'
-const route=useRoute()
-  export default {
-    name: 'ProductDetail',
-    components: {
-      Carousel,
-      Swiper
-    },
-    methods: {
-      addToCart ( id ) {
-        const cart = {
-          product_id: id,
-          qty: this.quantity
-        };
-        this.$http.post(
-          `${ process.env.VUE_APP_API }/api/${ process.env.VUE_APP_PATH }/cart`,
-          {
-            data: cart
-          } ).then( ( res ) => {
-              if (res.data.success) {
-                        localStorage.removeItem('cart')
-              route.push('/orders')
+    import CartStore from '@/stores/carts.js'
+    export default {
+        name: 'ProductDetail',
+        components: {
+            Carousel,
+            Swiper
+        },
+        mixins: [CartStore],
+        inject: ['emitter'],
+        methods: {
+            addToCart ( id ) {
+                const cart = {
+                    product_id: id,
+                    qty: this.quantity
+                }
+                this.$http.post(
+                    `${ process.env.VUE_APP_API }/api/${ process.env.VUE_APP_PATH }/cart`,
+                    { data: cart }
+                ).then(  res  => {
+                    if (res.data.success) {
+                        this.emitter?.emit( 
+                            'message', 
+                            { 
+                                type: 'success', 
+                                title: '加入購物車成功',
+                                content: res.data.message
+                            } 
+                        )
+                        // 通知其它元件（例如 Header）重新取得購物車資料
+                        this.emitter?.emit('refresh-cart')
+                    } else {
+                        this.emitter?.emit( 
+                            'message', 
+                            { 
+                                type: 'warning', 
+                                title: '加入購物車失敗',
+                                content: res.data.message
+                            } 
+                        );
+                    }
+              } ).catch(  err  => {
+                this.emitter?.emit( 
+                    'message',
+                    { 
+                        type: 'danger',
+                        title: '加入購物車發生錯誤',
+                        content: err.response?.data.message
+                    } 
+                );
+              } );
+          },
+          favorite () {
+            this.isFavorite = !this.isFavorite;
+            let favoriteList = localStorage.getItem( 'favorite' ) ? JSON.parse( localStorage.getItem( 'favorite' ) ) : []
+            if ( favoriteList.includes( this.product.id ) ) {
+              favoriteList = favoriteList.filter( f => f !== this.product.id )
+              this.emitter?.emit(
+                  'message',
+                  {
+                      type: 'success',
+                      title: '移除最愛成功',
+                      content: `已將${ this.product.title }移除最愛`
+                  }
+              )
             } else {
-              this.emitter?.emit( 'message', { type: 'warning', title: '加入購物車失敗', content: res.data.message } );
+              favoriteList = favoriteList.concat( this.product.id )
+              this.emitter?.emit(
+                  'message',
+                  {
+                      type: 'success',
+                      title: '加入最愛成功',
+                      content: `已將${ this.product.title }加入最愛`
+                  }
+              )
             }
-          } ).catch( ( err ) => {
-            this.emitter?.emit( 'message', { type: 'danger', title: '加入購物車失敗', content: err.response?.data.message } );
-          } );
-      },
-      favorite () {
-        this.isFavorite = !this.isFavorite;
-        let favoriteList = localStorage.getItem( 'favorite' ) ? JSON.parse( localStorage.getItem( 'favorite' ) ) : []
-        if ( favoriteList.includes( this.product.id ) ) {
-          favoriteList = favoriteList.filter( f => f !== this.product.id )
-          this.emitter?.emit('message',{type: 'success',title: '移除最愛成功',content: `已將${ this.product.title }移除最愛`} )
-        } else {
-          favoriteList = favoriteList.concat( this.product.id )
-          this.emitter?.emit('message',{type: 'success',title: '加入最愛成功',content: `已將${ this.product.title }加入最愛`} )
+            localStorage.setItem( 'favorite', JSON.stringify( favoriteList ) )
+          },
+        },
+        computed: {
+          filterProducts () {
+            return this.products.filter( product => product.id !== this.$route.query.id )
+          }
+        },
+        data () {
+          return {
+            product: {},
+            products: [],
+            quantity: 1,
+            isLoading: false,
+            isFavorite: false,
+          }
+        },
+        created () {
+          this.isLoading = true;
+          this.$http
+            .get( `${ process.env.VUE_APP_API }/api/${ process.env.VUE_APP_PATH }/products/all` )
+            .then( ( res ) => {
+              if ( res.data.success ) {
+                this.products = res.data.products;
+              } else {
+                this.emitter?.emit( 
+                    'message', 
+                    { 
+                        type: 'warning', 
+                        title: '取得商品列表失敗',
+                        content: res.data.message 
+                    }
+                );
+              }
+            } )
+            .catch( ( err ) => {
+              this.emitter?.emit(
+                  'message', 
+                  { 
+                      type: 'danger', 
+                      title: '取得商品列表發生錯誤', 
+                      content: err.response?.data.message 
+                  }
+              );
+            } ).finally( () => {
+              this.isLoading = false;
+            } );
+        },
+        mounted () {
+          this.isLoading = true;
+          this.$http
+            .get( `${ process.env.VUE_APP_API }/api/${ process.env.VUE_APP_PATH }/product/${ this.$route.query.id }` )
+            .then( ( res ) => {
+              if ( res.data.success ) {
+                this.product = res.data.product;
+              } else {
+                this.emitter?.emit(
+                    'message',
+                    { 
+                        type: 'warning', 
+                        title: '取得商品資訊失敗', 
+                        content: res.data.message
+                    }
+                );
+              }
+            } )
+            .catch( ( err ) => {
+              this.emitter?.emit(
+                  'message',
+                  { 
+                      type: 'danger',
+                      title: '取得商品資訊發生錯誤', 
+                      content: err.response?.data.message 
+                  }
+              );
+            } ).finally( () => {
+              this.isLoading = false;
+            } );
         }
-        localStorage.setItem( 'favorite', JSON.stringify( favoriteList ) )
-      },
-    },
-    computed: {
-      filterProducts () {
-        return this.products.filter( product => product.id !== this.$route.query.id )
       }
-    },
-    data () {
-      return {
-        product: {},
-        products: [],
-        quantity: 1,
-        isLoading: false,
-        isFavorite: false,
-      }
-    },
-    created () {
-      this.isLoading = true;
-      this.$http
-        .get( `${ process.env.VUE_APP_API }/api/${ process.env.VUE_APP_PATH }/products/all` )
-        .then( ( res ) => {
-          if ( res.data.success ) {
-            this.products = res.data.products;
-          } else {
-            this.emitter?.emit( 'message', { type: 'warning', title: '取得商品失敗', content: res.data.message } );
-          }
-        } )
-        .catch( ( err ) => {
-          this.emitter?.emit( 'message', { type: 'danger', title: '取得商品失敗', content: err.response?.data.message } );
-        } ).finally( () => {
-          this.isLoading = false;
-        } );
-    },
-    mounted () {
-      this.isLoading = true;
-      this.$http
-        .get( `${ process.env.VUE_APP_API }/api/${ process.env.VUE_APP_PATH }/product/${ this.$route.query.id }` )
-        .then( ( res ) => {
-          if ( res.data.success ) {
-            this.product = res.data.product;
-          } else {
-            this.emitter?.emit( 'message', { type: 'warning', title: '取得商品失敗', content: res.data.message } );
-          }
-        } )
-        .catch( ( err ) => {
-          this.emitter?.emit( 'message', { type: 'danger', title: '取得商品失敗', content: err.response?.data.message } );
-        } ).finally( () => {
-          this.isLoading = false;
-        } );
-    }
-  }
 </script>

@@ -2,7 +2,7 @@
     <LoadingC :is-full-page="true" :active="isLoading" />
     <div class="position-relative">
         <div class="position-absolute h-100"></div>
-        <FormC class="justify-content-center" v-slot="{ errors }" @submit="signin">
+        <FormC class="justify-content-center" v-slot="{ errors }" @submit="signin" :validation-schema="schema">
             <div class="container my-3">
                 <h1 class="font-weight-normal text-center">請先登入</h1>
                 <div class="row mb-2">
@@ -10,8 +10,8 @@
                         <label for="inputEmail" class="sr-only">電子信箱</label>
                     </div>
                     <div class="col-9">
-                        <FieldC type="email" id="inputEmail" class="form-control" placeholder="Email address" rules="required" name="username"
-                                v-model="user.username" v-bind:class="{ 'is-invalid': errors['username'] }" />
+                        <FieldC type="email" id="inputEmail" class="form-control" placeholder="Email address" name="username"
+                                label="此欄位" v-bind:class="{ 'is-invalid': errors['username'] }" />
                         <ErrorMessage name="username" class="invalid-feedback" />
                     </div>
                 </div>
@@ -20,8 +20,8 @@
                         <label for="inputPassword" class="sr-only">密碼</label>
                     </div>
                     <div class="col-9">
-                        <FieldC type="password" id="inputPassword" class="form-control" placeholder="Password" name="password" rules="required"
-                                v-model="user.password" v-bind:class="{ 'is-invalid': errors['password'] }" />
+                        <FieldC type="password" id="inputPassword" class="form-control" placeholder="Password" name="password"
+                                label="此欄位" v-bind:class="{ 'is-invalid': errors['password'] }" />
                         <ErrorMessage name="password" class="invalid-feedback" />
                     </div>
                 </div>
@@ -39,21 +39,26 @@
 <script>
     export default {
         data () {
-            return {
-                user: {
-                    username: '',
-                    password: ''
-                },
+            return {                
                 error: {},
                 isLoading: false
             }
         },
+		computed:{
+			schema() {
+				return {
+					username: 'required|email',
+					password: 'required'
+				}
+			}
+		},
         methods: {
-            signin () {
+            signin (user) {
                 this.isLoading = true
+				this.error={}
                 this.$http.post(
                     `${process.env.VUE_APP_API}/admin/signin`,
-                    this.user
+                    user
                 ).then(response => {
                     if (response.data.success) {
                         document.cookie = `hexToken=${response.data.token}; expires=${new Date(response.data.expired * 1000)}; path=/`

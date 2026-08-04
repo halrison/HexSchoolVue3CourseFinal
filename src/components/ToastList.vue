@@ -7,26 +7,12 @@
 </template>
 <script>
   import ToastMessage from '@/components/ToastMessage.vue'
+  import messageStore from '@/stores/messages.js'
   export default {
     name: 'ToastList',
     components: { ToastMessage },
     inject: [ 'emitter' ],
-    methods: {
-      pushMessage ( message ) {
-        this.messages?.push( message)
-        setTimeout(
-          () => {
-            this.messages?.pop()
-          },
-          4000
-        )
-      }
-},
-    data () {
-      return {
-        messages: []
-      }
-    },
+    mixins: [messageStore],
     mounted () {
       this.emitter.on( 'message', this.pushMessage );
     }

@@ -6,8 +6,8 @@ export default {
     }
   },
   methods: {
-    pushMessage(type, title, content=''){
-      this.messages?.push({ type, title, content })
+    pushMessage(message){
+      this.messages?.push(message)
       setTimeout(
         () => {
           this.messages?.pop()

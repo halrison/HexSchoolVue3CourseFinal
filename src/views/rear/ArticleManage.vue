@@ -41,264 +41,149 @@
         </table>
     </div>
     <Pagination :pagination="pagination" v-show="pagination.total_pages > 1" @paginate="getArticles" />
-    <Modal ref="articleModal" :title="`${article.id ? '編輯' : '新增'}文章`">
+    <Modal :title="modalTitle" size="lg" ref="AddEditModal">
         <LoadingC :is-full-page="false" :active="isLoading" />
-        <FormC ref="form" v-slot="{ errors }" @submit="addEditArticle" :initial-values="article" :initial-errors="{}">
-            <div class="modal-body container">
-                <div class="row py-1">
-                    <div class="col-4 col-sm-3">
-                        <label for="title">標題</label>
+        <div class="modal-dialog" role="dialog">
+            <FormC class="modal-content"
+                   ref="form" v-slot="{ errors }"
+                   @submit="addEditArticle" @reset="$refs.AddEditModal.hideModal()"
+                   :initial-values="tempArticle" :initial-errors="error">
+                   <div class="modal-header">
+                       <h5 class="modal-title">{{ modalTitle }}</h5>
                     </div>
-                    <div class="col-8 col-sm-9">
-                        <FieldC label="標題" name="title" class="form-control" id="title" type="text" rules="required" v-model="article.title" v-bind:class="{ 'is-invalid': errors['title'] }" />
-                        <ErrorMessage class="invalid-feedback" name="title" />
+                <div class="modal-body container">
+                    <div class="row py-1">
+                        <div class="col-4 col-sm-3">
+                            <label for="title">標題</label>
+                        </div>
+                        <div class="col-8 col-sm-9">
+                            <FieldC label="此欄位" name="title" class="form-control" id="title" type="text" rules="required" v-model="tempArticle.title" v-bind:class="{ 'is-invalid': errors['title'] }" />
+                            <ErrorMessage class="invalid-feedback" name="title" />
+                        </div>
                     </div>
-                </div>
-                <div class="row py-1">
-                    <div class="col-4 col-sm-3">
-                        <label for="image">圖片</label>
-                    </div>
-                    <div class="col-8 col-sm-9">
-                        <div class="mb-3">
-                            <label for="image" class="form-label">輸入圖片網址</label>
-                            <br />
-                            <div class="input-group">
-                                <FieldC label="網址" name="url" rules="url" type="text" class="form-control" id="image" aria-describedby="addImage" placeholder="請輸入圖片連結"
-                                        v-model="tempUrl" :standalone="true" v-bind:class="{ 'is-invalid': errors['url'] }" />
-                                <button id="addImage" type="button" class="btn btn-outline-primary btn-sm"
-                                        @click="saveImage(tempUrl)" v-bind:disabled="!tempUrl">
-                                    新增圖片
-                                </button>
+                    <div class="row py-1">
+                        <div class="col-4 col-sm-3">
+                            <label for="image">圖片</label>
+                        </div>
+                        <div class="col-8 col-sm-9">
+                            <div class="mb-3">
+                                <label for="image" class="form-label">輸入圖片網址</label>
+                                <br />
+                                <div class="input-group">
+                                    <FieldC label="此欄位" name="url" rules="url" type="text" class="form-control" id="image" aria-describedby="addImage" placeholder="請輸入圖片連結"
+                                            v-model="tempUrl" :standalone="true" v-bind:class="{ 'is-invalid': errors['url'] }" />
+                                    <button id="addImage" type="button" class="btn btn-outline-primary btn-sm"
+                                            @click="addImage(tempUrl,url=>tempArticle.image=url)" v-bind:disabled="!tempUrl">
+                                        新增圖片
+                                    </button>
+                                </div>
+                                <ErrorMessage class="invalid-feedback" name="url" />
                             </div>
-                            <ErrorMessage class="invalid-feedback" name="url" />
+                            <div class="mb-3">
+                                <label for="input" class="form-label">或上傳圖片</label>
+                                <FieldC class="form-control" name="file" type="file" rules="image" label="此欄位"
+                                        @change="event=>UploadImage(event.target.files[0], url=>tempUrl=url)" v-bind:class="{ 'is-invalid': errors['file'] }" :standalone="true" />
+                                <ErrorMessage name="file" class="invalid-feedback" :style="{'display': errors['file'] ? 'block' : 'none' }" />
+                            </div>
+                            <div class="input-group">
+                                <input type="url" readonly :value="tempArticle.image" class="form-control" />
+                                <input type="button" value="刪除" class="btn btn-outline-danger btn-sm" @click="()=>{delete tempArticle.image}" />
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="input" class="form-label">或上傳圖片</label>
-                            <FieldC class="form-control" name="file" type="file" rules="image" label="選取檔案"
-                                    @change="event=>saveImage(event.target.files[0])" v-bind:class="{ 'is-invalid': errors['file'] }" :standalone="true" />
-                            <ErrorMessage name="file" class="invalid-feedback" :style="{'display': errors['file'] ? 'block' : 'none' }" />
+                    </div>
+                    <div class="row py-1">
+                        <div class="col-4 col-sm-3">
+                            <label for="tag">標籤</label>
                         </div>
-                        <div class="input-group">
-                            <input type="url" readonly :value="article.image" class="form-control" />
-                            <input type="button" value="刪除" class="btn btn-outline-danger btn-sm" @click="()=>{delete article.image}" />
+                        <div class="col-8 col-sm-9">
+                            <p v-if="Array.isArray(tempArticle.tag)">
+                                <span class="badge rounded-pill bg-secondary" v-for="tag in tempArticle.tag" :key="tag">
+                                    {{ tag }}
+                                    <button type="button" class="btn-close" aria-label="Close" @click="removeTag(tag)"></button>
+                                </span>
+                            </p>
+                            <p class="input-group">
+                                <input class="form-control" id="tag" type="text" v-model="tempTag" />
+                                <button type="button" class="btn btn-outline-primary" @click="addTag(tempTag)">新增</button>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row py-1">
+                        <div class="col-4 col-sm-3">
+                            <label for="description">描述</label>
+                        </div>
+                        <div class="col-8 col-sm-9">
+                            <FieldC label="此欄位" as="textarea" name="description" class="form-control" id="description" rows="2" cols="40"
+                                    v-bind:class="{ 'is-invalid': errors['description'] }" />
+                            <ErrorMessage class="invalid-feedback" name="description" />
+                        </div>
+                    </div>
+                    <div class="row py-1">
+                        <div class="col-4 col-sm-3">
+                            <label for="content">內容</label>
+                        </div>
+                        <div class="col-8 col-sm-9">
+                            <FieldC label="此欄位" as="textarea" name="content" class="form-control" id="content" rows="2" cols="40"
+                                    v-bind:class="{ 'is-invalid': errors['content'] }" />
+                            <ErrorMessage class="invalid-feedback" name="content" />
+                        </div>
+                    </div>
+                    <div class="row py-1">
+                        <div class="col-4 col-sm-3">
+                            <label for="author">作者</label>
+                        </div>
+                        <div class="col-8 col-sm-9">
+                            <FieldC label="此欄位" name="author" class="form-control" id="author" type="text"
+                                    v-bind:class="{ 'is-invalid': errors['author'] }" />
+                            <ErrorMessage class="invalid-feedback" name="author" />
+                        </div>
+                    </div>
+                    <div class="row pt-1">
+                        <div class="col-4 col-sm-3">
+                            <label class="form-check-label" for="public">是否公開</label>
+                        </div>
+                        <div class="col-8 col-sm-9 col-lg-1">
+                            <FieldC label="此欄位" name="isPublic" as="input" type="checkbox" />
+                        </div>
+                        <div class="col-4 col-sm-3">
+                            <label for="date">建立日期</label>
+                        </div>
+                        <div class="col-8 col-sm-9 col-lg-5">
+                            <FieldC label="此欄位" name="date" class="form-control" id="date" type="date" rules="required"
+                                     v-bind:class="{ 'is-invalid': errors['date'] }" />
+                            <ErrorMessage class="invalid-feedback" name="date" />
                         </div>
                     </div>
                 </div>
-                <div class="row py-1">
-                    <div class="col-4 col-sm-3">
-                        <label for="tag">標籤</label>
-                    </div>
-                    <div class="col-8 col-sm-9">
-                        <p v-if="Array.isArray(article.tag)">
-                            <span class="badge rounded-pill bg-secondary" v-for="tag in article.tag" :key="tag">
-                                {{ tag }}
-                                <button type="button" class="btn-close" aria-label="Close" @click="removeTag(tag)"></button>
-                            </span>
-                        </p>
-                        <p class="input-group">
-                            <input class="form-control" id="tag" type="text" v-model="tempTag" />
-                            <button type="button" class="btn btn-outline-primary" @click="addTag(tempTag)" v-bind:disabled="!tempTag">新增</button>
-                        </p>
-                    </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">確定</button>
+                    <button type="reset" class="btn btn-secondary">取消</button>
                 </div>
-                <div class="row py-1">
-                    <div class="col-4 col-sm-3">
-                        <label for="description">描述</label>
-                    </div>
-                    <div class="col-8 col-sm-9">
-                        <textarea class="form-control" id="description" rows="2" cols="40" v-model="article.description" />
-                    </div>
-                </div>
-                <div class="row py-1">
-                    <div class="col-4 col-sm-3">
-                        <label for="content">內容</label>
-                    </div>
-                    <div class="col-8 col-sm-9">
-                        <FieldC label="內容" as="textarea" name="content" class="form-control" id="content" rows="2" cols="40" rules="required"
-                                v-model="article.content" v-bind:class="{ 'is-invalid': errors['content'] }" />
-                        <ErrorMessage class="invalid-feedback" name="content" />
-                    </div>
-                </div>
-                <div class="row py-1">
-                    <div class="col-4 col-sm-3">
-                        <label for="author">作者</label>
-                    </div>
-                    <div class="col-8 col-sm-9">
-                        <FieldC label="作者" name="author" class="form-control" id="author" type="text" rules="required"
-                                v-model="article.author" v-bind:class="{ 'is-invalid': errors['author'] }" />
-                        <ErrorMessage class="invalid-feedback" name="author" />
-                    </div>
-                </div>
-                <div class="row pt-1">
-                    <div class="col-4 col-sm-3">
-                        <label class="form-check-label" for="public">是否公開</label>
-                    </div>
-                    <div class="col-8 col-sm-9 col-lg-1">
-                        <FieldC class="form-check-input" id="public" type="checkbox" name="isPublic" label="是否公開"
-                               :checked="article.isPublic" v-bind:class="{ 'is-invalid': errors['isPublic'] }" />
-                    </div>
-                    <div class="col-4 col-sm-3">
-                        <label for="date">建立日期</label>
-                    </div>
-                    <div class="col-8 col-sm-9 col-lg-5">
-                        <FieldC label="建立日期" name="date" class="form-control" id="date" type="date" rules="required"
-                                v-model="article.create_at" v-bind:class="{ 'is-invalid': errors['date'] }" />
-                        <ErrorMessage class="invalid-feedback" name="date" />
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <input type="submit" class="btn btn-primary" value="確定" />
-                <input type="reset" class="btn btn-secondary" value="取消" @click="$refs.articleModal.hideModal()" />
-            </div>
-        </FormC>
+            </FormC>
+        </div>
     </Modal>
-    <Modal ref="removeModal" title="移除文章">
+    <Modal size="sm" ref="RemoveModal">
+        <div class="modal-header">
+            <h5 class="modal-title">刪除文章</h5>
+        </div>
         <div class="modal-body">
-            <p>您要移除{{ article?.title }}嗎？</p>
+            <p>您要{{modalTitle}}嗎？</p>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="$refs.removeModal.hideModal()">取消</button>
-            <button type="button" class="btn btn-danger" @click="removeArticle">確定</button>
+            <button type="button" class="btn btn-danger" @click="removeArticle(article.id)">確認</button>
+            <button type="button" class="btn btn-secondary" @click="$refs.RemoveModal.hideModal()">取消</button>
         </div>
     </Modal>
 </template>
 <script>
-    import {addImage, uploadImage} from '@/util'
-    import Pagination from '@/components/PaginationBar.vue';
-    import Modal from '@/components/ModalComponent.vue';
+    import Modal from '@/components/ModalComponent.vue'
+    import Pagination from '@/components/PaginationBar.vue'
     export default {
         name: 'ArticleManage',
         inject: ['emitter'],
         components: {
-            Modal,
             Pagination,
-        },
-        methods: {
-            addEditArticle (tempArticle) {
-                this.article = {
-                    ...tempArticle,
-                    create_at: new Date(tempArticle.create_at).getTime()
-                };
-                const type = this.article.id ? 'put' : 'post';
-                const api = this.article.id ? `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/article/${this.article.id}` : `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/article`;
-                this.$http[type](
-                    api,
-                    {
-                        data: this.article
-                    }).then(response => {
-                        if (response.data.success) {
-                            this.emitter.emit(
-                                'message',
-                                {
-                                    type: 'success',
-                                    title: this.article.id ? '文章編輯成功' : '文章新增成功',
-                                    content: this.article.id ? '文章已更新' : '文章已新增'
-                                }
-                            );
-                            this.$refs.articleModal.hideModal();
-                            this.getArticles();
-                        } else {
-                            this.emitter.emit(
-                                'message',
-                                {
-                                    type: 'warning',
-                                    title: this.article.id ? '文章編輯失敗' : '文章新增失敗',
-                                    content: response.data.message
-                                }
-                            );
-                        }
-                    }).catch(error => {
-                        this.emitter.emit(
-                            'message',
-                            {
-                                type: 'danger',
-                                title: this.article.id ? '文章編輯發生錯誤' : '文章新增發生錯誤',
-                                content: error
-                            }
-                        );
-                    });
-            },
-            getArticle (id) {
-                this.isLoading = true;
-                this.$http.get(
-                    `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/article/${id}`
-                ).then(response => {
-                    if (response.data.success) {
-                        this.article = response.data.article
-                        this.article.create_at = this.$filters.transDate(response.data.article.create_at)
-                    } else {
-                        this.emitter.emit(
-                            'message',
-                            {
-                                type: 'warning',
-                                title: '取得文章失敗',
-                                content: response.data.message
-                            }
-                        )
-                        this.article.create_at = this.$filters.transDate(Date.now())
-                    }
-                }).catch(error => {
-                    this.emitter.emit(
-                        'message',
-                        {
-                            type: 'danger',
-                            title: '取得文章發生錯誤',
-                            content: error.response?.data.message
-                        }
-                    )
-                    this.article.create_at = this.$filters.transDate(Date.now())    
-                }).finally(() => {
-                    this.isLoading = false;
-                });
-            },
-            getArticles (page = 1) {
-                this.isLoading = true;
-                this.$http.get(
-                    `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/articles`,
-                    {params: {page}}
-                ).then(response => {
-                    this.articles = response.data.articles;
-                    this.pagination = response.data.pagination;
-                }).catch(error => {
-                    this.emitter.emit(
-                        'message', {
-                        type: 'warning',
-                        title: '取得文章列表失敗',
-                        content: error.response.data.message
-                    });
-                }).finally(() => {
-                    this.isLoading = false;
-                });
-            },
-            openModal (action, id) {
-                if (action === 'add') {
-                    this.article.create_at = this.$filters.transDate(Date.now())
-                    this.$refs.articleModal.showModal()
-                } else if (action === 'edit') {
-                    this.getArticle(id)
-                    this.$refs.articleModal.showModal()
-                } else if (action === 'remove') {
-                    this.getArticle(id)
-                    this.$refs.removeModal.showModal()
-                }
-            },
-            removeArticle () {
-                this.$http.delete(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/article/${this.article.id}`)
-                    .then(({data}) => {
-                        if (data.success) {
-                            this.emitter.emit('message', {type: 'success', title: '移除文章成功', content: data.message});
-                            this.$refs.removeModal.hideModal();
-                            this.getArticles();
-                        } else {
-                            this.emitter.emit('message', {type: 'warning', title: '移除文章失敗', content: data.message});
-                        }
-                    }).catch(err => {
-                        this.emitter.emit('message', {type: 'danger', title: '移除文章發生錯誤', content: err});
-                    })
-            },
-            saveImage (file) {uploadImage(file, url => this.article.image = url)},
-            saveUrl (url) {addImage(url, url => this.article.image = url)}
+            Modal
         },
         data () {
             return {
@@ -306,12 +191,203 @@
                 articles: [],
                 article: {},
                 pagination: {},
-                tempUrl: '',
-                tempTag: ''
+                modalTitle: ''
+            }
+        },
+        methods: {
+            addEditArticle (tempArticle) {
+                this.article = {
+                    ...tempArticle,
+                    create_at: new Date(tempArticle.create_at).getTime()
+                }
+                const type = this.article.id ? 'put' : 'post'
+                const api = this.article.id ? `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/article/${this.article.id}` : `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/article`
+                this.$http[type](
+                    api,
+                    {data: this.article}
+                ).then(response => {
+                    if (response.data.success) {
+                        this.emitter.emit(
+                            'message',
+                            {
+                                type: 'success',
+                                title: this.article.id ? '文章編輯成功' : '文章新增成功',
+                                content: response.data.message
+                            }
+                        )
+                        this.$refs.AddEditModal.hideModal()
+                    } else {
+                        this.emitter.emit(
+                            'message',
+                            {
+                                type: 'warning',
+                                title: this.article.id ? '文章編輯失敗' : '文章新增失敗',
+                                content: response.data.message
+                            }
+                        )
+                    }
+                }).catch(error => {
+                    this.emitter.emit(
+                        'message',
+                        {
+                            type: 'danger',
+                            title: this.article.id ? '文章編輯發生錯誤' : '文章新增發生錯誤',
+                            content: error.response?.data.message
+                        }
+                    )
+                }).finally(() => {
+                    this.getArticles()
+                })
+            },
+            getArticles (page = 1) {
+                this.isLoading = true
+                this.$http.get(
+                    `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/articles`,
+                    {params: {page}}
+                ).then(response => {
+                    if (response.data.success) {
+                        this.articles = response.data.articles
+                        this.pagination = response.data.pagination
+                    } else {
+                        this.emitter.emit(
+                            'message',
+                            {
+                                type: 'warning',
+                                title: '取得文章列表失敗',
+                                content: response.data.message
+                            }
+                        )
+                    }
+                }).catch(error => {
+                    this.emitter.emit(
+                        'message',
+                        {
+                            type: 'warning',
+                            title: '取得文章列表失敗',
+                            content: error.response?.data.message
+                        }
+                    )
+                }).finally(() => {
+                    this.isLoading = false
+                })
+            },
+            openModal (action, id) {                
+                if (action === 'add') {
+                    this.modalTitle = '新增文章'
+                    this.$refs.AddEditModal.showModal()
+                } else if (action === 'edit') {
+                    this.article.id=id
+                    this.modalTitle = '編輯文章'
+                    this.$refs.AddEditModal.showModal()
+                } else if (action === 'remove') { 
+                    this.article.id=id
+                    this.modalTitle = `刪除${this.article.title}`
+                    this.$refs.RemoveModal.showModal()
+                }
+            },
+            removeArticle (id) {
+                this.$http.delete(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/article/${id}`)
+                    .then(({data}) => {
+                        if (data.success) {
+                            this.emitter?.emit(
+                                'message',
+                                {
+                                    title: '移除文章成功',
+                                    message: data.message,
+                                    type: 'success'
+                                }
+                            )
+                            this.$refs.RemoveModal.hideModal()
+                        } else {
+                            this.emitter?.emit(
+                                'message',
+                                {
+                                    title: '移除文章失敗',
+                                    message: data.message,
+                                    type: 'warning'
+                                }
+                            )
+                        }
+                    }).catch(err => {
+                        this.emitter?.emit(
+                            'message',
+                            {
+                                title: '移除文章發生錯誤',
+                                message: err.response?.data.message,
+                                type: 'danger'
+                            }
+                        )
+                    })
+            }
+        },
+        watch: {
+            'article.id' (newId) {
+                if (newId) {
+                    this.isLoading = true;
+                    this.$http.get(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/article/${newId}`)
+                        .then(response => {
+                            if (response.data.success) {
+                                this.tempArticle = {
+                                    ...response.data.article,
+                                    create_at: this.$filters.transDate(response.data.article.create_at)
+                                };
+                            } else {
+                                this.emitter.emit(
+                                    'message',
+                                    {
+                                        type: 'warning',
+                                        title: '取得文章失敗',
+                                        content: response.data.message
+                                    }
+                                )
+                                this.$refs.form.resetForm()
+                            }
+                        })
+                        .catch(err => {
+                            this.emitter.emit(
+                                'message',
+                                {
+                                    type: 'danger',
+                                    title: '取得文章失敗',
+                                    content: err
+                                }
+                            )
+                            this.$refs.form.resetForm()
+                        })
+                        .finally(() => {
+                            this.tempTag = ""
+                            this.isLoading = false
+                        });
+                } else {
+                    this.tempArticle = {
+                        title: "",
+                        image: "",
+                        tag: [],
+                        description: "",
+                        content: "",
+                        create_at: this.$filters.transDate(Date.now())
+                    }
+                    this.tempUrl = ""
+                    this.error = {}
+                    this.$refs.form.resetForm()
+                }
+            }
+        },
+        computed: {
+            schema(){
+                return{
+                    author: 'required',
+                    title: 'required',
+                    create_at(value) {
+                        if (!value) return '此欄位為必填'
+                        else if (!this.article.id && this.$filters.transDate(value) < this.$filters.transDate(Date.now())) return '不得比今天還早'
+                        else return true
+                    }
+                }
             }
         },
         mounted () {
-            this.getArticles();
+            this.getArticles()
         }
-    };
+    }
 </script>

@@ -44,106 +44,106 @@
         </table>
     </div>
     <Pagination :pagination="pagination" v-show="pagination.total_pages > 1" @paginate="getOrders" />
-    <Modal size="lg" :title="`訂單編號：${order.id}`" ref="orderModal">
-        <FormC ref="form" class="container-fluid" v-slot="{ errors }" @submit="editOrder" :initial-values="order" :initial-errors="{}">
-            <div class="modal-body table-responsive">
-                <div class="table">
-                    <section class="container-md">
-                        <p class="row">
-                            <span class="col-6 col-sm">建立日期</span>
-                            <span class="col-6 col-sm">{{ order.create_at ? $filters.transDate(order.create_at*1000) : '-' }}</span>
-                            <span class="col-6 col-sm">付款日期</span>
-                            <span class="col-6 col-sm">{{ order.is_paid ? $filters.transDate(order.paid_date*1000) : '等待付款中' }}</span>
-                        </p>
-                    </section>
-                    <section class="container-md">
-                        <p class="row">
-                            <span class="col-sm-6">商品名稱</span>
-                            <span class="col-4 col-sm-2 text-end">單價</span>
-                            <span class="col-4 col-sm-2 text-center">數量</span>
-                            <span class="col-4 col-sm-2 text-end">小計</span>
-                        </p>
-                        <FieldArray name="products">
-                            <p class="row" v-for="(product,idx) in products" :key="product.id">
+    <Modal size="xl" ref="EditModal">
+        <template v-slot="{order}">
+            <FormC class="container-fluid" v-slot="{errors}" :initial-errors="{}">
+                <div class="modal-body table-responsive">
+                    <div class="table">
+                        <section class="container-md">
+                            <p class="row">
+                                <span class="col-6 col-sm">建立日期</span>
+                                <span class="col-6 col-sm">{{ order.create_at ? $filters.transDate(order.create_at*1000) : '-' }}</span>
+                                <span class="col-6 col-sm">付款日期</span>
+                                <span class="col-6 col-sm">{{ order.is_paid ? $filters.transDate(order.paid_date*1000) : '等待付款中' }}</span>
+                            </p>
+                        </section>
+                        <section class="container-md">
+                            <p class="row">
+                                <span class="col-sm-6">商品名稱</span>
+                                <span class="col-4 col-sm-2 text-end">單價</span>
+                                <span class="col-4 col-sm-2 text-center">數量</span>
+                                <span class="col-4 col-sm-2 text-end">小計</span>
+                            </p>
+                            <p class="row" v-for="product in order.products" :key="product.id">
                                 <span class="col-sm-6 mt-2">{{ product.product.title }}</span>
                                 <span class="col-4 col-sm-2 text-end mt-2">{{product.product.price}}</span>
                                 <span class="col-4 col-sm-2 text-center">
-                                    <FieldC type="number" class="form-control" rules="integer|min:1" v-model.number="product.qty" @change="recount(product.id,product.qty)" :name="`products[${idx}].qty`" v-bind:class="{'is-invalid':errors[`products[${idx}].qty`]}" />
-                                    <ErrorMessage :name="`products[${idx}].qty`" class="invalid-feedback" />
+                                    <input v-model.number="product.qty" type="number" class="form-control" @change="recount(product.id,product.qty)" min="1" />
                                 </span>
                                 <span class="col-4 col-sm-2 text-end mt-2">{{ $filters.currency(product.total) }}</span>
                             </p>
-                        </FieldArray>
-                        <p class="row border-top border-danger">
-                            <template v-if="hasCoupon">
-                                <span class="col-6 col-sm-2">總計</span>
-                                <span class="col-6 col-sm-2 text-end">{{ $filters.currency(subTotal) }}</span>
-                                <span class="col-6 col-sm-2">折扣</span>
-                                <span class="col-6 col-sm-2 text-end">{{ $filters.currency(subTotal - finalTotal) }}</span>
-                                <span class="col-6 col-sm-2">優惠價</span>
-                                <span class="col-6 col-sm-2 text-end border border-danger">{{ $filters.currency(finalTotal) }}</span>
-                            </template>
-                            <template v-else>
-                                <span class="col-9 col-sm-10 text-sm-end">合計</span>
-                                <span class="col-3 col-sm-2 text-end  border border-danger">{{ $filters.currency(order.total) }}</span>
-                            </template>
-                        </p>
-                    </section>
-                    <hr />
-                    <section class="container-md">
-                        <p class="row">
-                            <span class="col-sm-3">地址</span>
-                            <span class="col-sm-9">
-                                <FieldC name="address" label="地址" rules="required" type="text" class="form-control w-100" v-model="user.address" v-bind:class="{'is-invalid':errors.address}" />
-                                <ErrorMessage name="address" class="invalid-feedback" />
-                            </span>
-                            <span class="col-sm-3">電子信箱</span>
-                            <span class="col-sm-9">
-                                <FieldC name="email" label="電子信箱" rules="required|email" type="email" class="form-control w-100" v-model="user.email" v-bind:class="{'is-invalid':errors.email}" />
-                                <ErrorMessage name="email" class="invalid-feedback" />
-                            </span>
-                        </p>
-                        <p class="row">
-                            <span class="col-3 col-lg">姓名</span>
-                            <span class="col-9 col-lg">
-                                <FieldC name="name" label="姓名" rules="required" type="text" class="form-control" v-model="user.name" v-bind:class="{'is-invalid':errors.name}" />
-                                <ErrorMessage name="name" class="invalid-feedback" />
-                            </span>
-                            <span class="col-3 col-lg">電話</span>
-                            <span class="col-9 col-lg">
-                                <FieldC name="tel" label="電話" rules="required|digits:10" type="tel" class="form-control" v-model="user.tel" v-bind:class="{'is-invalid':errors.tel}" />
-                                <ErrorMessage name="tel" class="invalid-feedback" />
-                            </span>
-                        </p>
-                        <p class="row">
-                            <span class="col-sm-3">留言</span>
-                            <span class="col-sm-9">
-                                <FieldC name="message" label="留言" as="textarea" class="form-control" v-model="order.message" />
-                            </span>
-                        </p>
-                    </section>
+                            <p class="row border-top border-danger">
+                                <template v-if="hasCoupon">
+                                    <span class="col-6 col-sm-2">總計</span>
+                                    <span class="col-6 col-sm-2 text-end">{{ $filters.currency(subTotal) }}</span>
+                                    <span class="col-6 col-sm-2">折扣</span>
+                                    <span class="col-6 col-sm-2 text-end">-{{ $filters.currency(subTotal - finalTotal) }}</span>
+                                    <span class="col-6 col-sm-2">優惠價</span>
+                                    <span class="col-6 col-sm-2 text-end border border-danger">{{ $filters.currency(finalTotal) }}</span>
+                                </template>
+                                <template v-else>
+                                    <span class="col-9 col-sm-10 text-sm-end">合計</span>
+                                    <span class="col-3 col-sm-2 text-end  border border-danger">{{ $filters.currency(order.total) }}</span>
+                                </template>
+                            </p>
+                        </section>
+                        <section class="container-md">
+                            <p class="row">
+                                <span class="col-sm-3">地址</span>
+                                <span class="col-sm-9">
+                                    <FieldC as="input" name="address" rules="required" class="form-control" v-bind:class="{'is-invalid':errors.address}" />
+                                    <ErrorMessage name="address" class="invalid-feedback" />
+                                </span>
+                                <span class="col-sm-3">電子信箱</span>
+                                <span class="col-sm-9">
+                                    <Field as="input" name="email" rules="required|email" class="form-control" v-bind:class="{'is-invalid':errors.email}" />
+                                    <ErrorMessage name="email" class="invalid-feedback" />
+                                </span>
+                            </p>
+                            <p class="row">
+                                <span class="col-3 col-lg">姓名</span>
+                                <span class="col-9 col-lg">
+                                    <FieldC as="input" name="name" rules="required" class="form-control" v-bind:class="{'is-invalid':errors.name}" />
+                                    <ErrorMessage name="name" class="invalid-feedback" />
+                                </span>
+                                <span class="col-3 col-lg">電話</span>
+                                <span class="col-9 col-lg">
+                                    <FieldC as="input" name="tel" rules="required" class="form-control" v-bind:class="{'is-invalid':errors.tel}" />
+                                    <ErrorMessage name="tel" class="invalid-feedback" />
+                                </span>
+                            </p>
+                            <p class="row">
+                                <span class="col-3 col-lg">留言</span>
+                                <span class="col-9 col-lg">
+                                    <FieldC as="textarea" name="message" class="form-control" />
+                                </span>
+                            </p>
+                        </section>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <input class="btn btn-primary" type="submit" value="確定" />
-                <input class="btn btn-secondary" type="reset" @click="$refs.orderModal.hideModal()" value="取消" />
-            </div>
-        </FormC>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" @click="editOrder">確定</button>
+                    <button class="btn btn-secondary" @click="$refs.EditModal.hideModal()">取消</button>
+                </div>
+            </FormC>
+        </template>
     </Modal>
-    <Modal ref="removeModal" title="移除訂單">
+    <Modal size="sm" ref="RemoveModal">
+        <div class="modal-header">
+            <h5 class="modal-title">{{order.id?'刪除訂單':'清空所有訂單'}}</h5>
+        </div>
         <div class="modal-body">
-            <p v-if="order.id">要刪除訂單編號{{order.id}}嗎?</p>
-            <p v-else>要清除所有訂單嗎</p>
+            <p>您要{{order.id?`刪除訂單編號${order.id}`:'清空所有訂單'}}嗎？</p>
         </div>
         <div class="modal-footer">
             <button class="btn btn-danger" @click="removeOrder">確定</button>
-            <button class="btn btn-secondary" @click="$refs.removeModal.hideModal()">取消</button>
+            <button class="btn btn-secondary" @click="$refs.RemoveModal.hideModal()">取消</button>
         </div>
     </Modal>
 </template>
 <script>
-    import Modal from '@/components/ModalComponent.vue'
     import Pagination from '@/components/PaginationBar.vue'
+    import Modal from '@/components/ModalComponent.vue'
     export default {
         name: 'OrderManage',
         inject: ['emitter'],
@@ -153,16 +153,31 @@
                 this.isLoading = true
                 this.$http.get(
                     `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/orders`,
-                    {
-                        params: {page}
-                    }).then(res => {
+                    {params: {page}}
+                ).then(res => {
+                    if (res.data.success) {
                         this.orders = res.data.orders
                         this.pagination = res.data.pagination
-                    }).catch(err => {
-                        this.emitter.emit('message', {type: 'danger', title: '取得訂單列表失敗', content: err.response.data.message})
-                    }).finally(() => {
-                        this.isLoading = false
-                    })
+                    } else this.emitter.emit(
+                        'message',
+                        {
+                            type: 'danger',
+                            title: '取得訂單列表失敗',
+                            content: res.data.message
+                        }
+                    )
+                }).catch(err => {
+                    this.emitter.emit(
+                        'message',
+                        {
+                            type: 'danger',
+                            title: '取得訂單列表發生錯誤',
+                            content: err.response?.data.message
+                        }
+                    )
+                }).finally(() => {
+                    this.isLoading = false
+                })
             },
             editOrder (tempOrder) {
                 const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/order/${this.order.id}`
@@ -171,45 +186,54 @@
                     user: this.user,
                     products: this.order.products
                 }
-                this.$http.put(api, {data: this.order}).then(res => {
-                    this.emitter.emit('message', {type: 'success', title: '編輯訂單成功', content: res.data.message})
-                    this.hide()
-                    this.getOrders(this.pagination.current_page)
+                this.$http.put(
+                    api,
+                    {data: this.order}
+                ).then(res => {
+                    if (res.data.success) {
+                        this.$refs.EditModal.hideModal()
+                        this.emitter.emit(
+                            'message',
+                            {
+                                type: 'success',
+                                title: '編輯訂單成功',
+                                content: res.data.message
+                            }
+                        )
+                        this.getOrders(this.pagination.current_page)
+                    } else this.emitter.emit(
+                        'message',
+                        {
+                            type: 'warning',
+                            title: '編輯訂單失敗',
+                            content: res.data.message
+                        }
+                    )
                 }).catch(err => {
-                    this.emitter.emit('message', {type: 'danger', title: '編輯訂單失敗', content: err.response.data.message})
+                    this.emitter.emit(
+                        'message',
+                        {
+                            type: 'danger',
+                            title: '編輯訂單發生錯誤',
+                            content: err.response?.data.message
+                        }
+                    )
                 })
             },
             openModal (type, id = '') {
-                this.type = type
+                this.order = this.orders.find(item => item.id === id) ?? {}
                 if (type === 'edit') {
-                    this.order = this.orders.find(item => item.id === id)
                     this.user = JSON.parse(JSON.stringify(this.order.user))
-                    this.$refs.orderModal.showModal()
+                    this.$refs.EditModal.showModal()
                 } else if (type === 'remove') {
-                    this.order = this.orders.find(item => item.id === id)
-                    this.$refs.removeModal.showModal()
+                    this.$refs.RemoveModal.showModal()
                 } else if (type === 'clear') {
-                    this.order = {}
-                    this.$refs.removeModal.showModal()
+                    this.$refs.RemoveModal.showModal()
                 }
             },
             recount (productId, qty) {
                 const index = this.order.products.findIndex(product => product.id === productId)
                 this.order.products[index].total = this.order.products[index].product.price * qty
-            },
-            removeOrder () {
-                this.$http.delete(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/order/${this.order.id}`)
-                    .then(({data}) => {
-                        if (data.success) {
-                            this.emitter?.emit('message', {title: '移除訂單成功', message: data.message, type: 'success'})
-                            this.hideModal()
-                            this.getOrders(this.pagination.current_page)
-                        } else {
-                            this.emitter?.emit('message', {title: '移除訂單失敗', message: data.message, type: 'warning'})
-                        }
-                    }).catch(err => {
-                        this.emitter?.emit('message', {title: '移除訂單發生錯誤', message: err, type: 'danger'})
-                    })
             }
         },
         computed: {
@@ -224,7 +248,6 @@
                 order: {},
                 pagination: {},
                 isLoading: false,
-                type: '',
                 user: {
                     address: '',
                     email: '',

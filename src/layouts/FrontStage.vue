@@ -1,7 +1,7 @@
 <template>
-    <main class="container" @message="pushMessage">
+    <main class="container">
         <ToastList />
-        <Header />
+        <Header :cartQty="cartList.length"/>
         <RouterView />
         <Footer />
     </main>
@@ -16,6 +16,14 @@
       Header,
       Footer,
       ToastList
+    },
+    data () {
+      return {
+        isLoading: false,
+        cartList: [],
+        total: 0,
+        final_total: 0
+      }
     }
   }
 </script>

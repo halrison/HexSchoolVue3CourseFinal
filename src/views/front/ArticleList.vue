@@ -13,7 +13,7 @@
       </nav>
       <div class="col-sm-9 mt-1">
         <div class="card-group row">
-          <div class="col-12 col-md-6 col-lg-4 row" v-for="article in filterArticles" :key="article.id">
+          <div class="col-12 col-md-6 col-lg-4 row" v-for="article in filterArticles.filter(article => !['-NjruxEi0mdTiUdzi3aK', '-NjruxEi0mdTiUdzi3aK '].includes(article.id))" :key="article.id">
             <ArticleCard :article="article" />
           </div>
         </div>

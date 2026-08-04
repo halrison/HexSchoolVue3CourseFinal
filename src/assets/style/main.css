@@ -7,6 +7,7 @@
   font-weight: normal;
 }
 
+a,
 .green {
   text-decoration: none;
   color: hsla(160, 100%, 37%, 1);
@@ -19,7 +20,7 @@
   }
 }
 
-@media (orientation: portrait) and (min-width: 1024px) {
+@media (min-width: 1024px) {
   body {
     display: flex;
     place-items: center;
